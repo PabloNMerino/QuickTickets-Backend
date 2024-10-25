@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { config } from "dotenv";
 import dbConnect from "./db/dbConnect";
+import authRouter from "./authentication/route/authRoute";
 
 config();
 
@@ -12,10 +13,12 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: `http://${HOST}:${PORT}`,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.use('/auth', authRouter);
 
 dbConnect();
 
