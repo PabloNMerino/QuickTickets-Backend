@@ -10,6 +10,7 @@ const authRouter = express.Router();
  * /auth/login:
  *   post:
  *     summary: Iniciar sesión
+ *     tags: [Auth]
  *     description: Permite a los usuarios iniciar sesión proporcionando email y password.
  *     requestBody:
  *       required: true
@@ -35,6 +36,48 @@ const authRouter = express.Router();
  *         description: User not found
  */
 authRouter.post("/login", authController.login);
+
+
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Registrar un nuevo usuario
+ *     tags: [Auth] 
+ *     description: Permite registrar un nuevo usuario proporcionando nombre, apellido, correo electrónico, contraseña y rol.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               first_name:
+ *                 type: string
+ *                 description: Nombre del usuario
+ *                 example: Pablo
+ *               last_name:
+ *                 type: string
+ *                 description: Apellido del usuario
+ *                 example: Merino
+ *               email:
+ *                 type: string
+ *                 description: Correo electrónico del usuario
+ *                 example: pablonicolas@hotmail.com
+ *               password:
+ *                 type: string
+ *                 description: Contraseña del usuario
+ *                 example: admin123
+ *               role:
+ *                 type: string
+ *                 description: Rol del usuario (por ejemplo, admin o customer)
+ *                 example: admin
+ *     responses:
+ *       201:
+ *         description: Usuario registrado exitosamente
+ *       400:
+ *         description: Datos de entrada inválidos
+ */
 authRouter.post("/register", authController.register);
 
 export default authRouter;

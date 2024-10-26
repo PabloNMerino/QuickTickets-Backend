@@ -21,7 +21,7 @@ const swaggerDefinition = {
   
   const options = {
     swaggerDefinition,
-    apis: ['./authentication/route/*.ts'], // Ruta a tus archivos de rutas donde agregarás las anotaciones de Swagger
+    apis: ['./authentication/route/*.ts', './users/route/*.ts'], // Ruta a tus archivos de rutas donde agregarás las anotaciones de Swagger
   };
   
   export default swaggerJSDoc(options);
