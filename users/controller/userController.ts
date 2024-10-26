@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User from "../model/userModel";
+import bcrypt from "bcrypt"
 
 class UserController {
 
@@ -68,6 +69,35 @@ class UserController {
             }
          catch (error) {
             return res.status(404).json({ error: "User not found" });
+        }
+    }
+
+    async updatePassword(req: Request, res: Response) {
+        try {
+
+            const { currentPassword, newPassword, repeatedNewPassword } = req.body;
+            const userId = req.userId;
+
+            if (newPassword !== repeatedNewPassword) {
+                return res.status(400).json({ message: 'Las nuevas contraseñas no coinciden.' });
+            }
+
+            const hashedPassword = await User.findById(userId, 'password');
+            if(hashedPassword!=null) {
+                const match = await bcrypt.compare(currentPassword, hashedPassword.password);
+                const hashedNewPassword = await bcrypt.hash(newPassword, 10)
+                if(match) {
+                    await User.findByIdAndUpdate(
+                        userId,
+                        { password: hashedNewPassword },
+                        { new: true }
+                    );
+                }
+            }
+            return res.status(200).json({ message: 'Contraseña actualizada exitosamente.' });
+        } catch (error) {
+            console.error('Error al actualizar la contraseña:', error);
+            return res.status(500).json({ message: 'Error al actualizar la contraseña.' });
         }
     }
 

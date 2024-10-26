@@ -11,6 +11,15 @@ const swaggerDefinition = {
       version: '1.0.0',
       description: 'Documentación de la API del backend  de Quick Tickets con Express y Swagger',
     },
+    components: {
+      securitySchemes: {
+          bearerAuth: {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT'
+          }
+      }
+  },
     servers: [
       {
         url: `http://${HOST}:${PORT}`,
@@ -21,7 +30,7 @@ const swaggerDefinition = {
   
   const options = {
     swaggerDefinition,
-    apis: ['./authentication/route/*.ts', './users/route/*.ts'], // Ruta a tus archivos de rutas donde agregarás las anotaciones de Swagger
+    apis: ['./authentication/route/*.ts', './users/route/*.ts'],
   };
   
   export default swaggerJSDoc(options);
