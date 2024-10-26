@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../../users/model/userModel";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
+//import { sendWelcomeEmail } from "../../emailService/emailSender"
 
 class AuthController {
 
@@ -13,6 +14,7 @@ class AuthController {
                 return res.status(400).json({ error: "User already exists" });
             }
             const user = await User.create(req.body);
+            //sendWelcomeEmail(email, req.body.first_name)
             return res.status(201).json(user);
         } catch (error) {
             console.error(error)

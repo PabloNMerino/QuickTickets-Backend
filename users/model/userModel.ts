@@ -24,15 +24,6 @@ const userSchema = new Schema({
         type: String,
         required: true,
         },
-    phone: {
-        type: String,
-        required: true,
-        match: [
-            /^\+?[1-9]\d{1,14}$/,
-            "Please fill a valid phone number",
-            ],
-        unique: true,
-    },
     role: {
         type: String,
         enum: Object.values(UserRole),
@@ -54,6 +45,6 @@ userSchema.pre("save", async function (next) {
     }
 });
 
-const User = model("Users", userSchema);
+    const User = model("Users", userSchema);
 
-export default User;
+    export default User;
