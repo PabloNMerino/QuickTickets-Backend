@@ -10,6 +10,8 @@ const usersRouter = express.Router();
  *   put:
  *     summary: Actualizar información de un usuario
  *     tags: [User] 
+ *     security:
+ *       - bearerAuth: []
  *     description: Actualiza la información del usuario. Requiere autenticación.
  *     requestBody:
  *       required: true
@@ -45,9 +47,11 @@ usersRouter.put("/update", isAuthenticated, userController.updateUser);
 /**
  * @swagger
  * /user/delete:
- *   put:
+ *   patch:
  *     summary: Eliminar un usuario (soft delete)
  *     tags: [User] 
+ *     security:
+ *       - bearerAuth: []
  *     description: Marca a un usuario como eliminado cambiando su estado a inactivo.
  *     responses:
  *       200:
@@ -63,6 +67,8 @@ usersRouter.patch("/delete", isAuthenticated, userController.softDeleteUser);
  *   get:
  *     summary: Obtener información de un usuario
  *     tags: [User] 
+ *     security:
+ *       - bearerAuth: []
  *     description: Devuelve la información del usuario especificado por el ID.
  *     parameters:
  *       - in: path
@@ -110,6 +116,8 @@ usersRouter.get("/information", isAuthenticated, userController.getUserInformati
  *   delete:
  *     summary: Eliminar un usuario
  *     tags: [User] 
+ *     security:
+ *       - bearerAuth: []
  *     description: Elimina un usuario permanentemente de la base de datos.
  *     parameters:
  *       - in: path
@@ -127,5 +135,43 @@ usersRouter.get("/information", isAuthenticated, userController.getUserInformati
  *         description: Usuario no encontrado
  */
 usersRouter.delete("/full-delete/:id", isAdmin, userController.fullDeleteUser);
+
+/**
+ * @swagger
+ * /user/update-password:
+ *   patch:
+ *     summary: Actualizar contraseña de usuario
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     description: Permite a un usuario autenticado actualizar su contraseña.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 description: Contraseña actual del usuario.
+ *                 example: oldPassword123
+ *               newPassword:
+ *                 type: string
+ *                 description: Nueva contraseña del usuario.
+ *                 example: newPassword456
+ *               repeatedNewPassword:
+ *                 type: string
+ *                 description: Nueva contraseña repetida del usuario.
+ *                 example: newPassword456
+ *     responses:
+ *       200:
+ *         description: Contraseña actualizada exitosamente
+ *       400:
+ *         description: Solicitud inválida (contraseñas nuevas diferentes)
+ *       500:
+ *         description: Error al actualizar la contraseña.
+ */
+usersRouter.patch("/update-password", isAuthenticated, userController.updatePassword);
 
 export default usersRouter;
