@@ -5,6 +5,8 @@ import dbConnection from "./db/dbConnection";
 import cors from "cors";
 import authRouter from "./authentication/route/authRoute";
 import userRouter from "./users/route/userRoute"
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./swaggerConfiguration/config"
 config();
 
 const PORT = Number(process.env.PORT) ?? 3000;
@@ -21,6 +23,8 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use('/auth', authRouter);
 app.use("/user", userRouter);
 
@@ -30,6 +34,7 @@ dbConnection();
 
 app.listen(PORT, HOST, () => {
     console.log(`Server is running on http://${HOST}:${PORT}`);
+    console.log('Documentación disponible en http://localhost:3000/api-docs');
 })
 
 
