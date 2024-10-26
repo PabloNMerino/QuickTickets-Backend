@@ -4,7 +4,7 @@ import { config } from "dotenv";
 import dbConnection from "./db/dbConnection";
 import cors from "cors";
 import authRouter from "./authentication/route/authRoute";
-
+import userRouter from "./users/route/userRoute"
 config();
 
 const PORT = Number(process.env.PORT) ?? 3000;
@@ -22,6 +22,7 @@ app.use(cors({
 }));
 
 app.use('/auth', authRouter);
+app.use("/user", userRouter);
 
 
 dbConnection();
