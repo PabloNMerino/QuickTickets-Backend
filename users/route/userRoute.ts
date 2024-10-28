@@ -32,7 +32,7 @@ const usersRouter = express.Router();
  *                 type: string
  *                 description: Nuevo correo electrónico del usuario
  *                 example: pablonicolas@hotmail.com
- *               pssword:
+ *               password:
  *                 type: string
  *                 description: Nueva clave de autenticacion de usuario
  *                 example: admin123

@@ -5,6 +5,7 @@ import dbConnection from "./db/dbConnection";
 import cors from "cors";
 import authRouter from "./authentication/route/authRoute";
 import userRouter from "./users/route/userRoute"
+import categoryRouter from "./categories/route/categoryRoute";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swaggerConfiguration/config"
 config();
@@ -27,6 +28,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/auth', authRouter);
 app.use("/user", userRouter);
+app.use("/category", categoryRouter);
 
 
 dbConnection();
