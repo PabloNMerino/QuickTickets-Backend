@@ -153,6 +153,85 @@ eventRouter.post('', isAuthenticated, eventController.createEvent);
 
 /**
  * @swagger
+ * /event/own-events:
+ *   get:
+ *     summary: Obtener eventos por ID del creador
+ *     tags: [Event]
+ *     security:
+ *       - bearerAuth: []
+ *     description: Recupera todos los eventos asociados a un creador específico utilizando su ID.
+ *     parameters:
+ *       - in: path
+ *         name: creatorId
+ *         required: true
+ *         description: ID del creador cuyas eventos se desean recuperar
+ *         schema:
+ *           type: string
+ *           example: "671fe9661b8f8d3bf35776cc"
+ *     responses:
+ *       200:
+ *         description: Lista de eventos recuperados exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: ID del evento
+ *                     example: "5f9f1b9f9c9d9c9d9c9d9c9d"
+ *                   name:
+ *                     type: string
+ *                     description: Nombre del evento
+ *                     example: "Iron Maiden"
+ *                   description:
+ *                     type: string
+ *                     description: Descripción del evento
+ *                     example: "Su regreso tan esperado"
+ *                   imageUrl:
+ *                     type: string
+ *                     description: URL de la imagen del evento
+ *                     example: "www.imagenDeMaiden.com"
+ *                   dateTime:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Fecha y hora del evento
+ *                     example: "2024-12-10T23:30"
+ *                   price:
+ *                     type: number
+ *                     description: Precio del evento
+ *                     example: 150000
+ *                   capacity:
+ *                     type: integer
+ *                     description: Capacidad máxima de asistentes al evento
+ *                     example: 100000
+ *                   location:
+ *                     type: string
+ *                     description: Ubicación del evento
+ *                     example: "Corrientes"
+ *                   latitude:
+ *                     type: number
+ *                     format: float
+ *                     description: Latitud del evento
+ *                     example: -27.46784
+ *                   longitude:
+ *                     type: number
+ *                     format: float
+ *                     description: Longitud del evento
+ *                     example: -58.8344
+ *                   creatorId:
+ *                     type: string
+ *                     description: ID del creador del evento
+ *                     example: "671fe9661b8f8d3bf35776cc"
+ *       500:
+ *         description: Error en el servidor
+ */
+eventRouter.get('/own-events', isAuthenticated, eventController.getMyPostedEvents);
+
+/**
+ * @swagger
  * /event/{id}:
  *   get:
  *     summary: Obtener un evento por ID
@@ -343,5 +422,6 @@ eventRouter.delete('/:id', isAuthenticated, eventController.deleteEvent);
  *         description: Error en el servidor
  */
 eventRouter.put('/:id', isAuthenticated, eventController.updateEvent);
+
 
 export default eventRouter;

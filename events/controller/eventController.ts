@@ -70,6 +70,17 @@ class EventController {
         }
     }
 
+    async getMyPostedEvents(req: Request, res: Response) {
+      try {
+        const userId = req.userId;
+        console.log("ID: " + userId);
+        const events = await Event.find({ creatorId: userId });
+        return res.status(200).json(events);
+      } catch (error) {
+          res.status(500).json({ message: 'Server error', error });
+      }
+  }
+
 }
 
 export const eventController = new EventController();
