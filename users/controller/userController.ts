@@ -36,7 +36,7 @@ class UserController {
   
         try {
             const userId = req.userId;
-            const user = await User.findById(userId, 'first_name last_name email phone role created_at updated_at');
+            const user = await User.findById(userId, 'first_name last_name email role');
 
             if(user!=undefined) {
                  return res.status(200).json(user);

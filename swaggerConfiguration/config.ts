@@ -30,7 +30,7 @@ const swaggerDefinition = {
   
   const options = {
     swaggerDefinition,
-    apis: ['./authentication/route/*.ts', './users/route/*.ts', './categories/route/*.ts'],
+    apis: ['./authentication/route/*.ts', './users/route/*.ts', './categories/route/*.ts', './events/route/*.ts'],
   };
   
   export default swaggerJSDoc(options);
