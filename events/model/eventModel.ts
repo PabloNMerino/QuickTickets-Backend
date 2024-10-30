@@ -26,8 +26,7 @@ const eventSchema = new Schema({
         required: true,
     },
     category: {
-        type: Types.ObjectId,
-        ref: "Category",
+        type: String,
         required: true,
     },
     location: {

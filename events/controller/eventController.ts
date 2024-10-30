@@ -5,11 +5,6 @@ import Event from "../model/eventModel";
 class EventController {
 
     async createEvent(req: Request, res: Response) {
-        const { category } = req.body;
-  
-        if (category && !mongoose.isValidObjectId(category)) {
-          return res.status(400).json({ message: 'Invalid category ObjectId' });
-        }
         try {
           const newEvent = Event.create(req.body);
           return res.status(201).send('Event succesfully created');
