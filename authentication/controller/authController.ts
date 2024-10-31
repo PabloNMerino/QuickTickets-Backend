@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import e, { Request, Response } from "express";
 import User from "../../users/model/userModel";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
@@ -34,19 +34,22 @@ class AuthController {
             if (!isPasswordValid) {
                 return res.status(400).json({ error: "Invalid password" });
             }
-    
-            const token = sign(
-                {
+            const userPayload = {
                 userId: existingUser._id,
                 email: existingUser.email,
                 role: existingUser.role,
-                },
+            }
+
+            const token = sign(
+                userPayload,
                 process.env.JWT_SECRET!,
                 { expiresIn: "1h" }
             );
     
-            return res.header("token", token).status(200).json({ message: "Loggin Successful" });
-        } catch (error) {}
+            return res.status(200).json(userPayload);
+        } catch (error) {
+            return res.status(400).json({message: "something went wrong"})
+        }
     }
 
 }
