@@ -110,6 +110,8 @@ usersRouter.patch("/delete", isAuthenticated, userController.softDeleteUser);
  */
 usersRouter.get("/information", isAuthenticated, userController.getUserInformation);
 
+usersRouter.get("/information-by-email", userController.getUserInformationByEmail);
+
 /**
  * @swagger
  * /user/full-delete/{id}:

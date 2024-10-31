@@ -101,5 +101,24 @@ class UserController {
         }
     }
 
+    async getUserInformationByEmail(req: Request, res: Response) {
+  
+        try {
+            const { email } = req.query;
+            //const userId = req.userId;
+            const user = await User.findOne({ email }, 'first_name last_name phone email role');
+
+            if(user!=undefined) {
+                 return res.status(200).json(user);
+            } else {
+                return res.status(500);
+            }        
+        }
+         catch(error) {
+            return res.status(500);
+        }
+  
+    }
+
 }
 export const userController = new UserController();
