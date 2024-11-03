@@ -4,11 +4,12 @@ import { config } from "dotenv";
 import dbConnection from "./db/dbConnection";
 import cors from "cors";
 import authRouter from "./authentication/route/authRoute";
-import userRouter from "./users/route/userRoute"
+import userRouter from "./users/route/userRoute";
 import categoryRouter from "./categories/route/categoryRoute";
-import eventRouter from "./events/route/eventRoute"
+import eventRouter from "./events/route/eventRoute";
 import swaggerUi from "swagger-ui-express";
-import swaggerSpec from "./swaggerConfiguration/config"
+import swaggerSpec from "./swaggerConfiguration/config";
+import cloudinaryRouter from "./cloudinary/route/cloudinaryRoute";
 config();
 
 const PORT = Number(process.env.PORT) ?? 3000;
@@ -20,7 +21,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: `http://${HOST}:${PORT}`,
+    origin: `http://${HOST}:3000`,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -31,6 +32,7 @@ app.use('/auth', authRouter);
 app.use("/user", userRouter);
 app.use("/category", categoryRouter);
 app.use("/event", eventRouter);
+app.use("/image", cloudinaryRouter);
 
 
 dbConnection();
