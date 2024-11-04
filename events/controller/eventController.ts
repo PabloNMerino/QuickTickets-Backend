@@ -1,11 +1,15 @@
 import { Request, Response } from "express";
 import mongoose from 'mongoose';
 import Event from "../model/eventModel";
-
+const { validationResult } = require("express-validator");
 class EventController {
 
     async createEvent(req: Request, res: Response) {
         try {
+          const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
           const newEvent = Event.create(req.body);
           return res.status(201).send('Event succesfully created');
         } catch (error) {
@@ -53,6 +57,10 @@ class EventController {
     async updateEvent(req: Request, res: Response) {
         const { id } = req.params;
         try {
+          const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
           const event = await Event.findByIdAndUpdate(id, req.body);
 
           if(!event) {
