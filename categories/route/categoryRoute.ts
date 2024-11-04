@@ -1,7 +1,7 @@
 import express from "express";
 import { categoryController } from "../controller/categoryController";
 import { isAdmin } from "../../middlewares";
-
+const { body } = require("express-validator");
 const categoryRouter = express.Router();
 
 /**
@@ -34,7 +34,10 @@ const categoryRouter = express.Router();
  *       500:
  *         description: Internal server error
  */
-categoryRouter.post('', isAdmin, categoryController.createCategory)
+categoryRouter.post('',[body('name').isString().isLength({ min: 3 }).withMessage('category name must be at least 3 characters long'),
+                        body('description').isString().isLength({ min: 3 }).withMessage('category description must be at least 3 characters long') ,
+                        body('imageUrl').isString().isLength({ min: 20 }).withMessage('image url must be at least 20 characters long')],
+                        isAdmin, categoryController.createCategory)
 
 /**
  * @swagger

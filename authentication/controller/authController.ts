@@ -2,12 +2,17 @@ import { Request, Response } from "express";
 import User from "../../users/model/userModel";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
+const { validationResult } = require("express-validator");
 //import { sendWelcomeEmail } from "../../emailService/emailSender"
 
 class AuthController {
 
     async register(req: Request, res: Response) {
         try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
             const { email } = req.body;
             const existingUser = await User.findOne({ email });
             if (existingUser) {
@@ -24,6 +29,10 @@ class AuthController {
 
     async login(req: Request, res: Response) {
         try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
             const { email, password } = req.body;
             const existingUser = await User.findOne({ email });
 

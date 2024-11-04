@@ -1,15 +1,19 @@
 import { Request, Response } from "express";
 import Category from "../model/categoryModel"
-
+const { validationResult } = require("express-validator");
 class CategoryController {
 
 
     async createCategory(req: Request, res: Response) {
         try {
-        Category.create(req.body);
-        return res.status(201).send(`Category ${req.body.name} succesfully created`);
+            const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+            Category.create(req.body);
+            return res.status(201).send(`Category ${req.body.name} succesfully created`);
         } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+            res.status(500).json({ message: 'Server error', error });
         }
     }
 
