@@ -60,6 +60,10 @@ class CategoryController {
         const updateData = req.body;
     
         try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
             const category = await Category.findByIdAndUpdate(id, updateData, { new: true });
     
             if (!category) {

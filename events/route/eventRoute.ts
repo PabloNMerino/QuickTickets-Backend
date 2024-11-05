@@ -1,9 +1,10 @@
 import express from "express";
 import { eventController } from "../controller/eventController";
 import { isAuthenticated } from "../../middlewares";
+import { eventValidation } from "../../middlewares/validations/events/eventValidation"
 
 const eventRouter = express.Router();
-const { body } = require("express-validator");
+
 /**
  * @swagger
  * /event/all:
@@ -149,15 +150,7 @@ eventRouter.get('/all', eventController.getAllEvents);
  *       500:
  *         description: Error en el servidor
  */
-eventRouter.post('',[body('name').isString().isLength({ min: 3 }).withMessage('event name must be at least 3 characters long'),
-                    body('description').isString().isLength({ min: 3 }).withMessage('event description must be at least 3 characters long') ,
-                    body('imageUrL').isString().isLength({ min: 20 }).withMessage('event image url must be at least 20 characters long'),
-                    body('price').isInt().isLength({ min: 1 }).withMessage('price must be type number'),
-                    body('capacity').isInt().isLength({ min: 1 }).withMessage('capacity must be type number'),
-                    body('location').isString().isLength({ min: 3 }).withMessage('location must be at least 3 characters long'),
-                    body('latitude').isInt().isLength({ min: 1 }).withMessage('latitude must be type number'),
-                    body('longitude').isInt().isLength({ min: 1 }).withMessage('longitude must be type number'),
-                ], isAuthenticated, eventController.createEvent);
+eventRouter.post('', eventValidation, isAuthenticated, eventController.createEvent);
 
 /**
  * @swagger
@@ -429,15 +422,7 @@ eventRouter.delete('/:id', isAuthenticated, eventController.deleteEvent);
  *       500:
  *         description: Error en el servidor
  */
-eventRouter.put('/:id',[body('name').isString().isLength({ min: 3 }).withMessage('event name must be at least 3 characters long'),
-                        body('description').isString().isLength({ min: 3 }).withMessage('event description must be at least 3 characters long') ,
-                        body('imageUrL').isString().isLength({ min: 20 }).withMessage('event image url must be at least 20 characters long'),
-                        body('price').isInt().isLength({ min: 1 }).withMessage('price must be type number'),
-                        body('capacity').isInt().isLength({ min: 1 }).withMessage('capacity must be type number'),
-                        body('location').isString().isLength({ min: 3 }).withMessage('location must be at least 3 characters long'),
-                        body('latitude').isInt().isLength({ min: 1 }).withMessage('latitude must be type number'),
-                        body('longitude').isInt().isLength({ min: 1 }).withMessage('longitude must be type number'),
-                    ], isAuthenticated, eventController.updateEvent);
+eventRouter.put('/:id', eventValidation, isAuthenticated, eventController.updateEvent);
 
 
 export default eventRouter;

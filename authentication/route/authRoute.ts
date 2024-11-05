@@ -1,9 +1,9 @@
 import express from "express";
 import { authController } from "../controller/authController";
+import { loginValidation, registerValidation } from "../../middlewares/validations/auth/authValidations"
 
 const authRouter = express.Router();
 
-const { body } = require("express-validator");
 /**
  * @swagger
  * /auth/login:
@@ -34,8 +34,7 @@ const { body } = require("express-validator");
  *       404:
  *         description: User not found
  */
-authRouter.post("/login", [body('email').isEmail().withMessage('email sintaxis is invalid'),
-                           body('password').isString().isLength({ min: 8 }).withMessage('password must be at least 8 characters long')], authController.login);
+authRouter.post("/login", loginValidation, authController.login);
 
 
 /**
@@ -78,10 +77,6 @@ authRouter.post("/login", [body('email').isEmail().withMessage('email sintaxis i
  *       400:
  *         description: Datos de entrada inválidos
  */
-authRouter.post("/register", [body('first_name').isString().isLength({ min: 3 }).withMessage('first_name must be at least 3 characters long'),
-                              body('last_name').isString().isLength({ min: 3 }).withMessage('last_name must be at least 3 characters long') ,
-                              body('email').isEmail().withMessage('email sintaxis is invalid'),
-                              body('phone').isInt().isLength({ min: 8 }).withMessage('phone number must be at least 8 characters'),
-                              body('password').isString().isLength({ min: 8 }).withMessage('password must be at least 8 characters long')], authController.register);
+authRouter.post("/register", registerValidation , authController.register);
 
 export default authRouter;

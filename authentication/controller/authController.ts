@@ -55,7 +55,7 @@ class AuthController {
                 { expiresIn: "1h" }
             );
     
-            return res.status(200).json(userPayload);
+            return res.header("token", token).status(200).json(userPayload);
         } catch (error) {
             return res.status(400).json({message: "something went wrong"})
         }
