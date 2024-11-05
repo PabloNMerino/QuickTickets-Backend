@@ -25,6 +25,10 @@ const eventSchema = new Schema({
         type: Number,
         required: true,
     },
+    availability: {
+        type: Number,
+        required: false,
+      },
     category: {
         type: String,
         required: true,
@@ -47,6 +51,14 @@ const eventSchema = new Schema({
         required: true,
     },
 })
+
+eventSchema.pre("save", function (next) {
+    if(this.isNew)  {
+        this.availability = this.capacity;
+    }
+
+    next();
+});
 
 const Event = model("Events", eventSchema);
 
