@@ -1,6 +1,7 @@
 import express from "express";
 import { eventController } from "../controller/eventController";
 import { isAuthenticated } from "../../middlewares";
+import { eventValidation } from "../../middlewares/validations/events/eventValidation"
 
 const eventRouter = express.Router();
 
@@ -149,7 +150,7 @@ eventRouter.get('/all', eventController.getAllEvents);
  *       500:
  *         description: Error en el servidor
  */
-eventRouter.post('', isAuthenticated, eventController.createEvent);
+eventRouter.post('', eventValidation, isAuthenticated, eventController.createEvent);
 
 /**
  * @swagger
@@ -421,7 +422,7 @@ eventRouter.delete('/:id', isAuthenticated, eventController.deleteEvent);
  *       500:
  *         description: Error en el servidor
  */
-eventRouter.put('/:id', isAuthenticated, eventController.updateEvent);
+eventRouter.put('/:id', eventValidation, isAuthenticated, eventController.updateEvent);
 
 
 export default eventRouter;

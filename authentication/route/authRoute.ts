@@ -1,5 +1,6 @@
 import express from "express";
 import { authController } from "../controller/authController";
+import { loginValidation, registerValidation } from "../../middlewares/validations/auth/authValidations"
 
 const authRouter = express.Router();
 
@@ -33,7 +34,7 @@ const authRouter = express.Router();
  *       404:
  *         description: User not found
  */
-authRouter.post("/login", authController.login);
+authRouter.post("/login", loginValidation, authController.login);
 
 
 /**
@@ -76,6 +77,6 @@ authRouter.post("/login", authController.login);
  *       400:
  *         description: Datos de entrada inválidos
  */
-authRouter.post("/register", authController.register);
+authRouter.post("/register", registerValidation , authController.register);
 
 export default authRouter;

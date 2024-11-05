@@ -1,7 +1,7 @@
 import express from "express";
 import { categoryController } from "../controller/categoryController";
 import { isAdmin } from "../../middlewares";
-
+import { categoryValidation } from "../../middlewares/validations/categories/categoryValidations"
 const categoryRouter = express.Router();
 
 /**
@@ -34,7 +34,7 @@ const categoryRouter = express.Router();
  *       500:
  *         description: Internal server error
  */
-categoryRouter.post('', isAdmin, categoryController.createCategory)
+categoryRouter.post('', categoryValidation, isAdmin, categoryController.createCategory)
 
 /**
  * @swagger
@@ -143,6 +143,6 @@ categoryRouter.get('/:id', categoryController.getCategory)
  *       500:
  *         description: Error en el servidor
  */
-categoryRouter.put('/:id', isAdmin, categoryController.updateCategory)
+categoryRouter.put('/:id', categoryValidation, isAdmin, categoryController.updateCategory)
 
 export default categoryRouter;
