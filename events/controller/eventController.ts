@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import mongoose from 'mongoose';
 import Event from "../model/eventModel";
 const { validationResult } = require("express-validator");
 class EventController {
@@ -83,7 +82,6 @@ class EventController {
           res.status(500).json({ message: 'Server error', error });
       }
   }
-
 }
 
 export const eventController = new EventController();
