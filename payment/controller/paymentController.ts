@@ -18,8 +18,11 @@ class PaymentController {
 
             //TRAER DE LA BBDD EL EVENTO
             const event = await Event.findById(eventId);
+            console.log(event);
+            
 
             if(event!=null) {
+                const priceInCents = event.price * 100;
                 const session = await stripe.checkout.sessions.create({
                     line_items: [
                         {
@@ -29,7 +32,7 @@ class PaymentController {
                                     description: event.description
                                 },
                                 currency:'ars',
-                                unit_amount: event.price,
+                                unit_amount: priceInCents,
                             },
                             quantity: quantity
                         }
@@ -42,6 +45,7 @@ class PaymentController {
             }
             return res.send('holis')
         } catch (error) {
+            console.log(error);
             
         }
     }
