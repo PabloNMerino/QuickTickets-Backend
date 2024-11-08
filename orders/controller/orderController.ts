@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import Order from "../model/orderModel";
-import { eventService } from "../../events/service/eventService"
 
 class OrderController {
 
@@ -8,7 +7,6 @@ class OrderController {
         const {eventId, quantity} = req.body;
         try {
             const userId = req.userId;
-            await eventService.discountAvailabilityAmount(eventId, quantity);
             const newOrder = Order.create({
                 eventId,
                 quantity,
