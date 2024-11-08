@@ -14,12 +14,13 @@ class PaymentController {
         try {
 
             //VERIFICAR SI HAY CANTIDAD DE TICKETS DISPONIBLES
-            await eventService.discountAvailabilityAmount(eventId, quantity);
-
+            const isAvailable = await eventService.checkAvailabilityAmount(eventId, quantity);
+            if(!isAvailable) {
+                res.status(400).json({message: 'tickets are no longer available'})
+            }
+            
             //TRAER DE LA BBDD EL EVENTO
             const event = await Event.findById(eventId);
-            console.log(event);
-            
 
             if(event!=null) {
                 const priceInCents = event.price * 100;
@@ -38,12 +39,11 @@ class PaymentController {
                         }
                     ],
                     mode: 'payment',
-                    success_url: 'https://static.wikia.nocookie.net/memeaventuras/images/8/8a/Exito.jpg/revision/latest?cb=20140608174656&path-prefix=es',
+                    success_url: `http://localhost:3001/order/success?eventId=${eventId}&quantity=${quantity}`,
                     cancel_url: 'https://e7.pngegg.com/pngimages/686/914/png-clipart-sad-frog-illustration-pepe-the-frog-sadness-alt-right-meme-sad-leaf-animals.png'
                 })
                 return res.json(session);
             }
-            return res.send('holis')
         } catch (error) {
             console.log(error);
             
