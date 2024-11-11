@@ -1,13 +1,9 @@
 import { Schema, model, Types } from "mongoose"
 
-const orderSchema = new Schema({
+const ticketSchema = new Schema({
     eventId: {
         type: Types.ObjectId,
         ref: "Event",
-        required: true,
-    },
-    quantity: {
-        type: Number,
         required: true,
     },
     buyerId: {
@@ -18,9 +14,12 @@ const orderSchema = new Schema({
     purchaseDateTime: {
         type: Date,
         default: Date.now
+    },
+    qrCode: {
+        type: String,
     }
 })
 
-const Order = model("Orders", orderSchema);
+const Ticket = model("Tickets", ticketSchema);
 
-export default Order;
+export default Ticket;

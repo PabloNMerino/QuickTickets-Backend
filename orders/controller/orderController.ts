@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Order from "../model/orderModel";
 import { eventService } from "../../events/service/eventService"
+import { ticketService } from "../../ticket/service/ticketService"
 
 class OrderController {
 
@@ -18,6 +19,7 @@ class OrderController {
             });
 
             await eventService.discountAvailabilityAmount(eventId, quantity);
+            await ticketService.createNewTicket(eventId, userId, quantity);
             res.status(200).json(newOrder);
         } catch (error) {
             res.status(400).json({ error });
