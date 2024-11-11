@@ -11,6 +11,7 @@ import swaggerSpec from "./swaggerConfiguration/config";
 import cloudinaryRouter from "./cloudinary/route/cloudinaryRoute";
 import orderRouter from "./orders/route/orderRoute";
 import paymentRouter from "./payment/route/paymentRoute";
+import ticketRouter from "./ticket/route/ticketRoute";
 config();
 
 const PORT = Number(process.env.PORT) ?? 3000;
@@ -35,6 +36,7 @@ app.use("/event", eventRouter);
 app.use("/image", cloudinaryRouter);
 app.use("/order", orderRouter);
 app.use("/pay", paymentRouter);
+app.use("/ticket", ticketRouter);
 
 dbConnection();
 
