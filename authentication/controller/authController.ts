@@ -3,7 +3,7 @@ import User from "../../users/model/userModel";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 const { validationResult } = require("express-validator");
-//import { sendWelcomeEmail } from "../../emailService/emailSender"
+import { emailService } from "../../email/service/emailService"
 
 class AuthController {
 
@@ -19,7 +19,7 @@ class AuthController {
                 return res.status(400).json({ error: "User already exists" });
             }
             const user = await User.create(req.body);
-            //sendWelcomeEmail(email, req.body.first_name)
+            emailService.sendRegistrationEmail(email, `${req.body.first_name} ${req.body.last_name}`);
             return res.status(201).json(user);
         } catch (error) {
             console.error(error)
