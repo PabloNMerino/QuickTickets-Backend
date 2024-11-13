@@ -10,8 +10,11 @@ class OrderController {
         const quantity = parseInt(req.query.quantity as string, 10);
         
         try {
-            //const userId = req.userId;
-            const userId = '6723dca849b067f3e40cfd69';
+            const userId = req.userId;
+            if (!userId) {
+                return res.status(400).json({ error: 'User ID is required' });
+            }
+            //const userId = '6723dca849b067f3e40cfd69';
             const newOrder = Order.create({
                 eventId,
                 quantity,
