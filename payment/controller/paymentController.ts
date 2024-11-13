@@ -42,7 +42,7 @@ class PaymentController {
                     success_url: `http://localhost:3001/order/success?eventId=${eventId}&quantity=${quantity}`,
                     cancel_url: 'https://e7.pngegg.com/pngimages/686/914/png-clipart-sad-frog-illustration-pepe-the-frog-sadness-alt-right-meme-sad-leaf-animals.png'
                 })
-                return res.json(session);
+                return res.json(session.url);
             }
         } catch (error) {
             console.log(error);
