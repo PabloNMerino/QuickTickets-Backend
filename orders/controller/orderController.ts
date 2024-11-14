@@ -6,8 +6,8 @@ import { ticketService } from "../../ticket/service/ticketService"
 class OrderController {
 
     async newOrder(req: Request, res: Response) {
-        const eventId = req.query.eventId as string;
-        const quantity = parseInt(req.query.quantity as string, 10);
+        const eventId = req.body.eventId as string;
+        const quantity = parseInt(req.body.quantity as string, 10);
         
         try {
             const userId = req.userId;

@@ -44,5 +44,3 @@ app.listen(PORT, HOST, () => {
     console.log(`Server is running on http://${HOST}:${PORT}`);
     console.log(`Documentación disponible en http://${HOST}:${PORT}/api-docs`);
 })
-
-
