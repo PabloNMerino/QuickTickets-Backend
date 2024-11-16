@@ -117,7 +117,15 @@ class UserController {
          catch(error) {
             return res.status(500);
         }
-  
+    }
+
+    async getAllCustomers(req: Request, res: Response) {
+        try {
+            const users = await User.find({role: 'customer'});
+            return res.status(200).json(users);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
 }

@@ -85,6 +85,16 @@ class TicketController {
             res.status(400).json({ error });
         }
     }
+
+    async getAllTicketsByBuyerId(req: Request, res: Response) {
+        const userId = req.userId;
+        try {
+            const tickets = await Ticket.find({buyerId: userId});
+            return res.status(200).json(tickets);
+        } catch (error) {
+            return res.status(500);
+        }
+    }
 }
 
 export const ticketController = new TicketController();
