@@ -19,7 +19,8 @@ class OrderController {
             });
 
             await eventService.discountAvailabilityAmount(eventId, quantity);
-            await ticketService.createNewTicket(eventId, userId, quantity);
+            const newTicket = await ticketService.createNewTicket(eventId, userId, quantity);
+            
             res.status(200).json(newOrder);
         } catch (error) {
             res.status(400).json({ error });
