@@ -176,4 +176,6 @@ usersRouter.delete("/full-delete/:id", isAdmin, userController.fullDeleteUser);
  */
 usersRouter.patch("/update-password", isAuthenticated, userController.updatePassword);
 
+usersRouter.get('/all-customers', isAdmin, userController.getAllCustomers)
+
 export default usersRouter;
