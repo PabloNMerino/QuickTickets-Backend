@@ -1,4 +1,5 @@
 import { registrationTemplate } from "../templates/registrationEmail"
+import { purchaseTemplate } from "../templates/purchaseEmail"
 import { minify } from 'html-minifier-terser';
 import { transporter } from "../config/emailSenderConfig"
 
@@ -28,8 +29,8 @@ class EmailService {
         }
     }
 
-    async sendPurchaseEmail(destinationEmail: string, userFullName: string) {
-        const htmlContent = registrationTemplate(userFullName);
+    async sendPurchaseEmail(destinationEmail: string, title: string, date: Date, quantity: number) {
+        const htmlContent = purchaseTemplate(title, date, quantity);
         const minifiedHtml = await minify(htmlContent, {
                                 collapseWhitespace: true,
                                 removeComments: true,
@@ -40,7 +41,7 @@ class EmailService {
         const mailOptions = {
             from: process.env.SMTP_USER,
             to: destinationEmail,
-            subject: `¡Bienvenido a QuickTickets!`,
+            subject: `¡Tu compra fue exitosa!`,
             html: minifiedHtml,
         };
 

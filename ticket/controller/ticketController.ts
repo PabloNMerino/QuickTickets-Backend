@@ -5,6 +5,8 @@ import Event from "../../events/model/eventModel";
 import PDFDocument from 'pdfkit';
 import path from 'path';
 import QRCode from 'qrcode';
+import { ticketService } from "../service/ticketService"
+import { emailService } from "../../email/service/emailService"
 
 class TicketController {
 
