@@ -82,6 +82,10 @@ class EventController {
           res.status(500).json({ message: 'Server error', error });
       }
   }
+
+  async pauseEvent(req: Request, res: Response) {
+    
+  }
 }
 
 export const eventController = new EventController();

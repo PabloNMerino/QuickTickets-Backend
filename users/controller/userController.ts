@@ -128,5 +128,20 @@ class UserController {
         }
     }
 
+    async pauseUserCostumer(req: Request, res: Response) {
+        const { userId } = req.body;
+
+        try {
+            const user = await User.findById(userId);
+            if(user!=null) {
+                user.is_active = false;
+                await user.save()
+            }
+            return res.status(200).send(`${user?.first_name} ${user?.last_name} now paused`);
+        } catch (error) {
+            
+        }
+    }
+
 }
 export const userController = new UserController();
