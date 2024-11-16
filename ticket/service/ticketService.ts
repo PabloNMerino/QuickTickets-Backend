@@ -1,5 +1,9 @@
 import Ticket from "../model/ticketModel";
 import QRCode from 'qrcode';
+import PDFDocument from 'pdfkit';
+import fs from "fs"
+import Event from "../../events/model/eventModel";
+import User from "../../users/model/userModel";
 
 class TicketService {
 
@@ -22,8 +26,7 @@ class TicketService {
     
                 // Guardar el ticket en la base de datos
                 return Ticket.create(ticket);
-            });
-    
+            });    
             // Ejecutar todas las promesas para crear los tickets
             await Promise.all(ticketPromises);
         } catch (error) {

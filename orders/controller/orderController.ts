@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import Order from "../model/orderModel";
 import { eventService } from "../../events/service/eventService"
 import { ticketService } from "../../ticket/service/ticketService"
+import Event from "../../events/model/eventModel"
+import User from "../../users/model/userModel"
+import { emailService } from "../../email/service/emailService"
 
 class OrderController {
 
@@ -14,7 +17,8 @@ class OrderController {
             if (!userId) {
                 return res.status(400).json({ error: 'User ID is required' });
             }
-            //const userId = '6723dca849b067f3e40cfd69';
+            const event = await Event.findById(eventId);
+            const user = await User.findById(userId, 'email')
             const newOrder = Order.create({
                 eventId,
                 quantity,
@@ -23,6 +27,10 @@ class OrderController {
 
             await eventService.discountAvailabilityAmount(eventId, quantity);
             await ticketService.createNewTicket(eventId, userId, quantity);
+            
+            if(user!=null && event!=null) {
+                await emailService.sendPurchaseEmail(user.email, event.name, event.dateTime, quantity)
+            }
             res.status(200).json(newOrder);
         } catch (error) {
             res.status(400).json({ error });
