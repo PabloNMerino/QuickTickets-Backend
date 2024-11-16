@@ -6,12 +6,15 @@ import { ticketService } from "../../ticket/service/ticketService"
 class OrderController {
 
     async newOrder(req: Request, res: Response) {
-        const eventId = req.query.eventId as string;
-        const quantity = parseInt(req.query.quantity as string, 10);
+        const eventId = req.body.eventId as string;
+        const quantity = parseInt(req.body.quantity as string, 10);
         
         try {
-            //const userId = req.userId;
-            const userId = '6723dca849b067f3e40cfd69';
+            const userId = req.userId;
+            if (!userId) {
+                return res.status(400).json({ error: 'User ID is required' });
+            }
+            //const userId = '6723dca849b067f3e40cfd69';
             const newOrder = Order.create({
                 eventId,
                 quantity,

@@ -4,6 +4,6 @@ import { isAuthenticated } from "../../middlewares";
 
 const orderRouter = express.Router();
 
-orderRouter.get('/success'/*, isAuthenticated*/, orderController.newOrder);
+orderRouter.post('/success', isAuthenticated, orderController.newOrder);
 
 export default orderRouter;
