@@ -87,7 +87,7 @@ class TicketController {
     }
 
     async getAllTicketsByBuyerId(req: Request, res: Response) {
-        const userId = req.userId;
+        const userId = req.userId;  
         try {
             const tickets = await Ticket.find({buyerId: userId});
             return res.status(200).json(tickets);
