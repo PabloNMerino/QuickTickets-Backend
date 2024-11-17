@@ -82,6 +82,29 @@ class EventController {
           res.status(500).json({ message: 'Server error', error });
       }
   }
+
+  async toggleEventStatus(req: Request, res: Response) {
+    const { eventId } = req.body;
+    
+    try {
+        const event = await Event.findById(eventId);
+
+        if (!event) {
+            return res.status(404).send("Event not found");
+        }
+
+        // Alternar el estado de is_active
+        event.is_active = !event.is_active;
+
+        await event.save();
+
+        const status = event.is_active ? "active" : "paused";
+        return res.status(200).send(`${event.name} is now ${status}`);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send("An error occurred while toggling the event status");
+    }
+  }
 }
 
 export const eventController = new EventController();

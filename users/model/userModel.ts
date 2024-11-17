@@ -33,7 +33,7 @@ const userSchema = new Schema({
         enum: Object.values(UserRole),
         default: UserRole.Customer
     },
-    is_enabled: {
+    is_active: {
         type: Boolean,
         default: true,          
     }

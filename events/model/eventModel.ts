@@ -50,6 +50,10 @@ const eventSchema = new Schema({
         ref: "User",
         required: true,
     },
+    is_active: {
+        type: Boolean,
+        default: true,          
+    }
 })
 
 eventSchema.pre("save", function (next) {
