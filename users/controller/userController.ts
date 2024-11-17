@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../model/userModel";
 import bcrypt from "bcrypt"
+import { emailService } from "../../email/service/emailService";
 
 class UserController {
 
@@ -142,7 +143,8 @@ class UserController {
             user.is_active = !user.is_active;
     
             await user.save();
-    
+            emailService.sendUserStatusEmail(user?.email, user.is_active);
+
             const status = user.is_active ? "active" : "paused";
             return res.status(200).send(`${user.first_name} ${user.last_name} is now ${status}`);
         } catch (error) {

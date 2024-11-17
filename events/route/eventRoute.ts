@@ -5,6 +5,8 @@ import { eventValidation } from "../../middlewares/validations/events/eventValid
 
 const eventRouter = express.Router();
 
+eventRouter.get("/all-paused-events", isAdmin, eventController.getAllPausedEvents);
+
 /**
  * @swagger
  * /event/all:
@@ -424,6 +426,7 @@ eventRouter.delete('/:id', isAuthenticated, eventController.deleteEvent);
  */
 eventRouter.put('/:id', eventValidation, isAuthenticated, eventController.updateEvent);
 eventRouter.patch("/toggle-status", isAdmin, eventController.toggleEventStatus);
+
 
 
 export default eventRouter;

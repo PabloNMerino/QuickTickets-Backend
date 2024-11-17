@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import Event from "../model/eventModel";
+import User from "../../users/model/userModel"
 const { validationResult } = require("express-validator");
+import { emailService } from "../../email/service/emailService";
 class EventController {
 
     async createEvent(req: Request, res: Response) {
@@ -32,12 +34,21 @@ class EventController {
 
     async getAllEvents(req: Request, res: Response) {
         try {
-            const allEvents = await Event.find();
+            const allEvents = await Event.find({ is_active: true });
             return res.status(200).json(allEvents);
           } catch (error) {
               res.status(500).json({ message: 'Server error', error });
           }
     }
+
+    async getAllPausedEvents(req: Request, res: Response) {
+      try {
+          const allEvents = await Event.find({ is_active: false });
+          return res.status(200).json(allEvents);
+        } catch (error) {
+            res.status(500).json({ message: error });
+        }
+  }
 
     async deleteEvent(req: Request, res: Response) {
         const { id } = req.params;
@@ -88,7 +99,7 @@ class EventController {
     
     try {
         const event = await Event.findById(eventId);
-
+        const userCreator = await User.findById(event?.creatorId);
         if (!event) {
             return res.status(404).send("Event not found");
         }
@@ -97,7 +108,9 @@ class EventController {
         event.is_active = !event.is_active;
 
         await event.save();
-
+        if(userCreator!=null) {
+          emailService.sendUserEventStatusEmail(userCreator.email, event.is_active, event.name)
+        }
         const status = event.is_active ? "active" : "paused";
         return res.status(200).send(`${event.name} is now ${status}`);
     } catch (error) {
