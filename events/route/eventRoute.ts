@@ -1,6 +1,6 @@
 import express from "express";
 import { eventController } from "../controller/eventController";
-import { isAuthenticated } from "../../middlewares";
+import { isAuthenticated, isAdmin } from "../../middlewares";
 import { eventValidation } from "../../middlewares/validations/events/eventValidation"
 
 const eventRouter = express.Router();
@@ -423,6 +423,7 @@ eventRouter.delete('/:id', isAuthenticated, eventController.deleteEvent);
  *         description: Error en el servidor
  */
 eventRouter.put('/:id', eventValidation, isAuthenticated, eventController.updateEvent);
+eventRouter.patch("/toggle-status", isAdmin, eventController.toggleEventStatus);
 
 
 export default eventRouter;

@@ -10,7 +10,7 @@ class UserController {
             const userId = req.userId;
             const user = await User.findById(userId);
             if(user!=null) {
-                user.is_enabled = false;
+                user.is_active = false;
                 await user.save()
             }
             return res.status(200).send(`${user?.first_name} ${user?.last_name} deleted succesfully`);
@@ -128,18 +128,26 @@ class UserController {
         }
     }
 
-    async pauseUserCostumer(req: Request, res: Response) {
+    async toggleUserStatus(req: Request, res: Response) {
         const { userId } = req.body;
-
+    
         try {
             const user = await User.findById(userId);
-            if(user!=null) {
-                user.is_active = false;
-                await user.save()
+    
+            if (!user) {
+                return res.status(404).send("User not found");
             }
-            return res.status(200).send(`${user?.first_name} ${user?.last_name} now paused`);
+    
+            // Alternar el estado de is_active
+            user.is_active = !user.is_active;
+    
+            await user.save();
+    
+            const status = user.is_active ? "active" : "paused";
+            return res.status(200).send(`${user.first_name} ${user.last_name} is now ${status}`);
         } catch (error) {
-            
+            console.error(error);
+            return res.status(500).send("An error occurred while toggling the user status");
         }
     }
 
