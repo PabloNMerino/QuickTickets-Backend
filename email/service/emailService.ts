@@ -2,6 +2,10 @@ import { registrationTemplate } from "../templates/registrationEmail"
 import { purchaseTemplate } from "../templates/purchaseEmail"
 import { minify } from 'html-minifier-terser';
 import { transporter } from "../config/emailSenderConfig"
+import { activeUserTemplate } from "../templates/activeUserEmail"
+import { pausedUserTemplate } from "../templates/pauseUserEmail"
+import { pauseEventTemplate } from "../templates/pauseEventEmail"
+import { activeEventTemplate } from "../templates/activeEventEmail"
 
 class EmailService {
 
@@ -42,6 +46,54 @@ class EmailService {
             from: process.env.SMTP_USER,
             to: destinationEmail,
             subject: `¡Tu compra fue exitosa!`,
+            html: minifiedHtml,
+        };
+
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log('Correo enviado:', info.response);
+        } catch (error) {
+            console.error('Error enviando el correo:', error);
+        }
+    }
+
+    async sendUserStatusEmail(destinationEmail: string, isActive: Boolean) {
+        const htmlContent = isActive? activeUserTemplate() : pausedUserTemplate();
+        const minifiedHtml = await minify(htmlContent, {
+                                collapseWhitespace: true,
+                                removeComments: true,
+                                minifyCSS: true,
+                                minifyJS: true,
+                            });
+
+        const mailOptions = {
+            from: process.env.SMTP_USER,
+            to: destinationEmail,
+            subject: isActive? 'Tu cuanta ha sido reestablecida' : 'Tu cuenta ha sido pausada',
+            html: minifiedHtml,
+        };
+
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log('Correo enviado:', info.response);
+        } catch (error) {
+            console.error('Error enviando el correo:', error);
+        }
+    }
+
+    async sendUserEventStatusEmail(destinationEmail: string, isActive: Boolean, eventName: string) {
+        const htmlContent = isActive? activeEventTemplate(eventName) : pauseEventTemplate(eventName);
+        const minifiedHtml = await minify(htmlContent, {
+                                collapseWhitespace: true,
+                                removeComments: true,
+                                minifyCSS: true,
+                                minifyJS: true,
+                            });
+
+        const mailOptions = {
+            from: process.env.SMTP_USER,
+            to: destinationEmail,
+            subject: isActive? 'Tu evento ha sido reestablecida' : 'Tu evento ha sido pausada',
             html: minifiedHtml,
         };
 
