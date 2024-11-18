@@ -6,6 +6,7 @@ import { activeUserTemplate } from "../templates/activeUserEmail"
 import { pausedUserTemplate } from "../templates/pauseUserEmail"
 import { pauseEventTemplate } from "../templates/pauseEventEmail"
 import { activeEventTemplate } from "../templates/activeEventEmail"
+import { reminderTemplate } from "../templates/remiderEmail"
 
 class EmailService {
 
@@ -94,6 +95,30 @@ class EmailService {
             from: process.env.SMTP_USER,
             to: destinationEmail,
             subject: isActive? 'Tu evento ha sido reestablecida' : 'Tu evento ha sido pausada',
+            html: minifiedHtml,
+        };
+
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log('Correo enviado:', info.response);
+        } catch (error) {
+            console.error('Error enviando el correo:', error);
+        }
+    }
+
+    async sendReminderEmail(destinationEmail: string, title: string, date: Date, quantity: number) {
+        const htmlContent = reminderTemplate(title, date, quantity);
+        const minifiedHtml = await minify(htmlContent, {
+                                collapseWhitespace: true,
+                                removeComments: true,
+                                minifyCSS: true,
+                                minifyJS: true,
+                            });
+
+        const mailOptions = {
+            from: process.env.SMTP_USER,
+            to: destinationEmail,
+            subject: 'Tu evento se acerca!',
             html: minifiedHtml,
         };
 
