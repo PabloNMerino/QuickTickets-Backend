@@ -39,6 +39,11 @@ class AuthController {
             if (!existingUser) {
                 return res.status(404).json({ error: "User not found" });
             }
+
+            if (!existingUser.is_active) {
+                return res.status(404).json({ error: "User paused" });
+            }
+
             const isPasswordValid = await compare(password, existingUser.password!);
             if (!isPasswordValid) {
                 return res.status(400).json({ error: "Invalid password" });
