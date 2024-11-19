@@ -123,7 +123,7 @@ class UserController {
 
     async getAllCustomers(req: Request, res: Response) {
         try {
-            const users = await User.find({role: 'customer'});
+            const users = await User.find({role: 'customer'}, 'id first_name last_name phone email role is_active');
             return res.status(200).json(users);
         } catch (error) {
             console.log(error);

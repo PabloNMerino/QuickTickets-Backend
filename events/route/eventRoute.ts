@@ -425,6 +425,34 @@ eventRouter.delete('/:id', isAuthenticated, eventController.deleteEvent);
  *         description: Error en el servidor
  */
 eventRouter.put('/:id', eventValidation, isAuthenticated, eventController.updateEvent);
+
+/**
+ * @swagger
+ * /event/toggle-status:
+ *   patch:
+ *     summary: Activar o pausar un evento
+ *     tags: [Event]
+ *     security:
+ *       - bearerAuth: []
+ *     description: Cambia el estado de un evento entre activo y pausado.
+ *     parameters:
+ *       - in: path
+ *         name: eventId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Identificador único del evento.
+ *         example: 5f8d04b8a1b2c3d4e5f6g7h8
+ *     responses:
+ *       200:
+ *         description: Estado del evento actualizado exitosamente
+ *       400:
+ *         description: Solicitud inválida (ID de evento no proporcionado o formato incorrecto)
+ *       404:
+ *         description: Evento no encontrado
+ *       500:
+ *         description: Error al actualizar el estado del evento.
+ */
 eventRouter.patch("/toggle-status", isAdmin, eventController.toggleEventStatus);
 
 

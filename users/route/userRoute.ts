@@ -176,9 +176,158 @@ usersRouter.delete("/full-delete/:id", isAdmin, userController.fullDeleteUser);
  */
 usersRouter.patch("/update-password", isAuthenticated, userController.updatePassword);
 
+/**
+ * @swagger
+ * /user/all-customers:
+ *   get:
+ *     summary: Obtener todos los clientes tipo "customers"
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     description: Devuelve una lista de todos los clientes con tipo "customers".
+ *     responses:
+ *       200:
+ *         description: Lista de clientes obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: Identificador único del cliente.
+ *                     example: 63f1b8e4f1a7c2d1e3b4567c
+ *                   first_name:
+ *                     type: string
+ *                     description: Nombre del cliente.
+ *                     example: Juan
+ *                   last_name:
+ *                     type: string
+ *                     description: Apellido del cliente.
+ *                     example: Pérez
+ *                   email:
+ *                     type: string
+ *                     description: Correo electrónico del cliente.
+ *                     example: juan.perez@example.com
+ *                   phone:
+ *                     type: string
+ *                     description: Teléfono del cliente.
+ *                     example: +541112345678
+ *                   role:
+ *                     type: string
+ *                     description: Tipo de cliente.
+ *                     example: customer
+ *                   is_active:
+ *                     type: boolean
+ *                     description: cliente activo o pausado.
+ *                     example: true
+ *       401:
+ *         description: No autorizado (falta token o es inválido)
+ *       500:
+ *         description: Error al obtener la lista de clientes.
+ */
 usersRouter.get('/all-customers', isAdmin, userController.getAllCustomers)
+
+/**
+ * @swagger
+ * /user/toggle-status:
+ *   patch:
+ *     summary: Alternar el estado de un usuario
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     description: Cambia el estado de un usuario (activo o inactivo) basado en su ID.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: Identificador único del usuario.
+ *                 example: 63f1b8e4f1a7c2d1e3b4567c
+ *     responses:
+ *       200:
+ *         description: Estado del usuario actualizado exitosamente
+ *       400:
+ *         description: Solicitud inválida (ID de usuario no proporcionado o inválido)
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error al actualizar el estado del usuario.
+ */
 usersRouter.patch('/toggle-status', isAdmin, userController.toggleUserStatus)
+
+/**
+ * @swagger
+ * /user/send-forgot-password-email:
+ *   post:
+ *     summary: Enviar email para recuperar contraseña
+ *     tags: [User]
+ *     description: Envía un email con instrucciones para recuperar la contraseña a la dirección proporcionada.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: Correo electrónico del usuario que solicita la recuperación de contraseña.
+ *                 example: user@example.com
+ *     responses:
+ *       200:
+ *         description: Email enviado exitosamente
+ *       400:
+ *         description: Solicitud inválida (correo no proporcionado o con formato incorrecto)
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error al enviar el email.
+ */
 usersRouter.post('/send-forgot-password-email', userController.sendForgotPasswordEmail)
+
+/**
+ * @swagger
+ * /user/new-password:
+ *   patch:
+ *     summary: Restablecer contraseña
+ *     tags: [User]
+ *     description: Permite restablecer la contraseña del usuario utilizando un token de recuperación.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 description: Nueva contraseña deseada.
+ *                 example: newPassword123
+ *               newPasswordRepeated:
+ *                 type: string
+ *                 description: Repetición de la nueva contraseña para verificación.
+ *                 example: newPassword123
+ *               token:
+ *                 type: string
+ *                 description: Token de recuperación enviado al email del usuario.
+ *                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *     responses:
+ *       200:
+ *         description: Contraseña restablecida exitosamente
+ *       400:
+ *         description: Solicitud inválida (contraseñas no coinciden o token inválido)
+ *       401:
+ *         description: Token de recuperación no autorizado o expirado
+ *       500:
+ *         description: Error al restablecer la contraseña.
+ */
 usersRouter.patch('/new-password', userController.generateNewPassword)
 
 export default usersRouter;
