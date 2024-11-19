@@ -3,6 +3,8 @@ import Event from "../model/eventModel";
 import User from "../../users/model/userModel"
 const { validationResult } = require("express-validator");
 import { emailService } from "../../email/service/emailService";
+import schedule from "node-schedule"
+import { eventService } from "../service/eventService";
 class EventController {
 
     async createEvent(req: Request, res: Response) {
@@ -11,7 +13,15 @@ class EventController {
             if(!errors.isEmpty()) {
                 return res.status(400).json({ errors: errors.array() });
             }
-          const newEvent = Event.create(req.body);
+          const newEvent = await Event.create(req.body);
+          const eventId = newEvent.id;
+          const { dateTime } = req.body;
+          const eventDateModified = new Date(dateTime);
+
+          schedule.scheduleJob(eventDateModified, function () {
+            eventService.deleteScheduledEvent(eventId);
+        });
+
           return res.status(201).send('Event succesfully created');
         } catch (error) {
           res.status(500).json({ message: 'Server error', error });

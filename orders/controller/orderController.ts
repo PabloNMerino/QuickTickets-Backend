@@ -40,7 +40,6 @@ class OrderController {
     
                 const eventDateModified = new Date(eventDate);
                 eventDateModified.setDate(eventDateModified.getDate() - 7);
-                console.log(eventDateModified);
     
                 // Programar el recordatorio
                 schedule.scheduleJob(eventDateModified, function () {
