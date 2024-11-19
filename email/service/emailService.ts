@@ -7,6 +7,7 @@ import { pausedUserTemplate } from "../templates/pauseUserEmail"
 import { pauseEventTemplate } from "../templates/pauseEventEmail"
 import { activeEventTemplate } from "../templates/activeEventEmail"
 import { reminderTemplate } from "../templates/remiderEmail"
+import { forgotPasswordTemplate } from "../templates/forgotPasswordEmail"
 
 class EmailService {
 
@@ -94,7 +95,7 @@ class EmailService {
         const mailOptions = {
             from: process.env.SMTP_USER,
             to: destinationEmail,
-            subject: isActive? 'Tu evento ha sido reestablecida' : 'Tu evento ha sido pausada',
+            subject: isActive? 'Tu evento ha sido reestablecido' : 'Tu evento ha sido pausado',
             html: minifiedHtml,
         };
 
@@ -119,6 +120,30 @@ class EmailService {
             from: process.env.SMTP_USER,
             to: destinationEmail,
             subject: 'Tu evento se acerca!',
+            html: minifiedHtml,
+        };
+
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log('Correo enviado:', info.response);
+        } catch (error) {
+            console.error('Error enviando el correo:', error);
+        }
+    }
+
+    async sendForgotPasswordEmail(destinationEmail: string, url: string) {
+        const htmlContent = forgotPasswordTemplate(url);    
+        const minifiedHtml = await minify(htmlContent, {
+                                collapseWhitespace: true,
+                                removeComments: true,
+                                minifyCSS: true,
+                                minifyJS: true,
+                            });
+
+        const mailOptions = {
+            from: process.env.SMTP_USER,
+            to: destinationEmail,
+            subject: 'Reestablece tu constraseña',
             html: minifiedHtml,
         };
 
