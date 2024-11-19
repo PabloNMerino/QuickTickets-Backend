@@ -5,6 +5,81 @@ import { eventValidation } from "../../middlewares/validations/events/eventValid
 
 const eventRouter = express.Router();
 
+/**
+ * @swagger
+ * /event/all-paused-events:
+ *   get:
+ *     summary: Obtener eventos pausados
+ *     tags: [Event]
+ *     security:
+ *       - bearerAuth: []
+ *     description: Devuelve una lista de todos los eventos que están pausados.
+ *     responses:
+ *       200:
+ *         description: Lista de eventos pausados obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: ID único del evento
+ *                     example: "5f9f1b9f9c9d9c9d9c9d9c9d"
+ *                   name:
+ *                     type: string
+ *                     description: Nombre del evento
+ *                     example: "Iron Maiden"
+ *                   description:
+ *                     type: string
+ *                     description: Descripción del evento
+ *                     example: "Su regreso tan esperado"
+ *                   imageUrl:
+ *                     type: string
+ *                     description: URL de la imagen del evento
+ *                     example: "www.imagenDeMaiden.com"
+ *                   dateTime:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Fecha y hora del evento
+ *                     example: "2024-12-10T23:30"
+ *                   price:
+ *                     type: number
+ *                     description: Precio del evento
+ *                     example: 150000
+ *                   capacity:
+ *                     type: integer
+ *                     description: Capacidad máxima de asistentes al evento
+ *                     example: 100000
+ *                   category:
+ *                     type: string
+ *                     description: ID de la categoría del evento
+ *                     example: "671fea9e39cc09a5a207b907"
+ *                   location:
+ *                     type: string
+ *                     description: Ubicación del evento
+ *                     example: "Corrientes"
+ *                   latitude:
+ *                     type: number
+ *                     format: float
+ *                     description: Latitud del evento
+ *                     example: -27.46784
+ *                   longitude:
+ *                     type: number
+ *                     format: float
+ *                     description: Longitud del evento
+ *                     example: -58.8344
+ *                   creatorId:
+ *                     type: string
+ *                     description: ID del creador del evento
+ *                     example: "671fe9661b8f8d3bf35776cc"
+ *       404:
+ *         description: No se encontraron eventos pausados
+ *       500:
+ *         description: Error al obtener los eventos pausados.
+ */
 eventRouter.get("/all-paused-events", isAdmin, eventController.getAllPausedEvents);
 
 /**
