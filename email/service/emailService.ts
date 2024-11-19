@@ -132,7 +132,7 @@ class EmailService {
     }
 
     async sendForgotPasswordEmail(destinationEmail: string, url: string) {
-        const htmlContent = forgotPasswordTemplate(url);
+        const htmlContent = forgotPasswordTemplate(url);    
         const minifiedHtml = await minify(htmlContent, {
                                 collapseWhitespace: true,
                                 removeComments: true,
