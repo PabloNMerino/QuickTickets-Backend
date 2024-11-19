@@ -30,6 +30,16 @@ class EventService {
             throw error;
         }
     }
+
+    async deleteScheduledEvent (eventId: string) {
+        try {
+            const event = await Event.findByIdAndDelete(eventId);
+            } 
+        catch (error) {
+            throw error;
+        }
+    }
+
 }
 
 export const eventService = new EventService();

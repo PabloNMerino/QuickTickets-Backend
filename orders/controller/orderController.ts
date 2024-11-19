@@ -40,12 +40,19 @@ class OrderController {
     
                 const eventDateModified = new Date(eventDate);
                 eventDateModified.setDate(eventDateModified.getDate() - 7);
-                console.log(eventDateModified);
     
-                // Programar el recordatorio
+                // Programar el recordatorio 7 dias antes
                 schedule.scheduleJob(eventDateModified, function () {
                     emailService.sendReminderEmail(user.email, event.name, event.dateTime, quantity);
                 });
+
+                const dayOfEvent = new Date(eventDate);
+                dayOfEvent.setHours(0, 0, 0, 0);
+                // Programar el recordatorio el dia del evento
+                schedule.scheduleJob(dayOfEvent, function () {
+                    emailService.sendReminderEmail(user.email, event.name, event.dateTime, quantity);
+                });
+
             }
     
             res.status(200).json(newOrder);

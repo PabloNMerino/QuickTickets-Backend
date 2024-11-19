@@ -8,6 +8,7 @@ import { pauseEventTemplate } from "../templates/pauseEventEmail"
 import { activeEventTemplate } from "../templates/activeEventEmail"
 import { reminderTemplate } from "../templates/remiderEmail"
 import { forgotPasswordTemplate } from "../templates/forgotPasswordEmail"
+import { lastReminderTemplate } from "../templates/lastReminderEmail"
 
 class EmailService {
 
@@ -144,6 +145,30 @@ class EmailService {
             from: process.env.SMTP_USER,
             to: destinationEmail,
             subject: 'Reestablece tu constraseña',
+            html: minifiedHtml,
+        };
+
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log('Correo enviado:', info.response);
+        } catch (error) {
+            console.error('Error enviando el correo:', error);
+        }
+    }
+
+    async sendLastReminderEmail(destinationEmail: string, title: string, date: Date, quantity: number) {
+        const htmlContent = lastReminderTemplate(title, date, quantity);
+        const minifiedHtml = await minify(htmlContent, {
+                                collapseWhitespace: true,
+                                removeComments: true,
+                                minifyCSS: true,
+                                minifyJS: true,
+                            });
+
+        const mailOptions = {
+            from: process.env.SMTP_USER,
+            to: destinationEmail,
+            subject: 'Tu evento es hoy!',
             html: minifiedHtml,
         };
 
