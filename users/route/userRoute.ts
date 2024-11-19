@@ -178,5 +178,7 @@ usersRouter.patch("/update-password", isAuthenticated, userController.updatePass
 
 usersRouter.get('/all-customers', isAdmin, userController.getAllCustomers)
 usersRouter.patch('/toggle-status', isAdmin, userController.toggleUserStatus)
+usersRouter.post('/send-forgot-password-email', userController.sendForgotPasswordEmail)
+usersRouter.patch('/new-password', userController.generateNewPassword)
 
 export default usersRouter;

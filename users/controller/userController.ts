@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../model/userModel";
 import bcrypt from "bcrypt"
 import { emailService } from "../../email/service/emailService";
+import { sign, verify } from "jsonwebtoken";
 
 class UserController {
 
@@ -150,6 +151,60 @@ class UserController {
         } catch (error) {
             console.error(error);
             return res.status(500).send("An error occurred while toggling the user status");
+        }
+    }
+
+    async sendForgotPasswordEmail(req: Request, res: Response) {
+        const { email } = req.body;
+    
+        try {
+            const user = await User.findOne({ email });;
+ 
+            if (!user) {
+                return res.status(404).json({ error: 'Usuario no encontrado' });
+            }
+
+            const token = sign(
+                { email: email },
+                process.env.JWT_SECRET!,
+                { expiresIn: "30m" }
+            );
+          
+                       
+            const url= `http://localhost:3000/recover-password?token=${token}`
+            emailService.sendForgotPasswordEmail(user.email, url);
+
+            return res.status(200).send(`mail sended to ${user.email}`);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send("An error occurred while toggling the user status");
+        }
+    }
+
+    async generateNewPassword(req: Request, res: Response) {
+        const { newPassword, newPasswordRepeated, token } = req.body;
+    
+        try {
+ 
+            if (newPassword!=newPasswordRepeated) {
+                return res.status(404).json({ error: 'Ambas contraseñas son diferentes' });
+            }
+
+            const decodedToken = verify(token, process.env.JWT_SECRET!) as { email: string; iat: number; exp: number };;
+            const email = decodedToken.email;
+            const user = await User.findOne({ email });
+              
+            const hashedNewPassword = await bcrypt.hash(newPassword, 10)
+            await User.findByIdAndUpdate(
+                user?.id,
+                { password: hashedNewPassword },
+                { new: true }
+            );
+            
+            return res.status(200).send(`password updated`);
+        } catch (error) {
+            console.error(error);
+            return res.status(400).send("El token ha expirado");
         }
     }
 
