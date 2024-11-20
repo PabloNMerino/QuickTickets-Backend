@@ -82,6 +82,8 @@ const eventRouter = express.Router();
  */
 eventRouter.get("/all-paused-events", isAdmin, eventController.getAllPausedEvents);
 
+eventRouter.get('/range', eventController.getEventsByDateRange)
+
 /**
  * @swagger
  * /event/all:
@@ -529,6 +531,96 @@ eventRouter.put('/:id', eventValidation, isAuthenticated, eventController.update
  *         description: Error al actualizar el estado del evento.
  */
 eventRouter.patch("/toggle-status", isAdmin, eventController.toggleEventStatus);
+
+/**
+ * @swagger
+ * /event/category/:categoryName:
+ *   get:
+ *     summary: Obtener eventos filtrados por categoría
+ *     tags: [Event]
+ *     description: Devuelve una lista de eventos filtrados según el nombre de la categoría especificada.
+ *     parameters:
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nombre de la categoría por la cual filtrar los eventos.
+ *         example: Cultura
+ *     responses:
+ *       200:
+ *         description: Lista de eventos filtrados obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     description: Identificador único del evento.
+ *                     example: 672272773d5248be4b5964a7
+ *                   name:
+ *                     type: string
+ *                     description: Nombre del evento.
+ *                     example: Feria Internacional del Libro
+ *                   description:
+ *                     type: string
+ *                     description: Descripción del evento.
+ *                     example: Más de 200 editoriales y autores presentan sus obras en esta feria cultural.
+ *                   imageUrl:
+ *                     type: string
+ *                     format: url
+ *                     description: URL de la imagen del evento.
+ *                     example: https://grafiasmusic.com/wp-content/uploads/2024/05/38020.webp
+ *                   dateTime:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Fecha y hora del evento.
+ *                     example: 2025-01-22T21:00:00.000Z
+ *                   price:
+ *                     type: number
+ *                     description: Precio del evento.
+ *                     example: 15000
+ *                   capacity:
+ *                     type: integer
+ *                     description: Capacidad total del evento.
+ *                     example: 3000
+ *                   category:
+ *                     type: string
+ *                     description: Categoría del evento.
+ *                     example: Cultura
+ *                   location:
+ *                     type: string
+ *                     description: Ubicación del evento.
+ *                     example: Guadalajara, México
+ *                   latitude:
+ *                     type: number
+ *                     format: float
+ *                     description: Latitud de la ubicación del evento.
+ *                     example: 20.6597
+ *                   longitude:
+ *                     type: number
+ *                     format: float
+ *                     description: Longitud de la ubicación del evento.
+ *                     example: -103.3496
+ *                   creatorId:
+ *                     type: string
+ *                     description: Identificador del creador del evento.
+ *                     example: 671fe9661b8f8d3bf35776cc
+ *                   availability:
+ *                     type: integer
+ *                     description: Cantidad de tickets disponibles.
+ *                     example: 3000
+ *                   is_active:
+ *                     type: boolean
+ *                     description: Indica si el evento está activo.
+ *                     example: true
+ *       500:
+ *         description: Error al obtener los eventos.
+ */
+eventRouter.get('/category/:categoryName', eventController.getEventsByCategoryName);
 
 
 

@@ -5,6 +5,7 @@ const { validationResult } = require("express-validator");
 import { emailService } from "../../email/service/emailService";
 import schedule from "node-schedule"
 import { eventService } from "../service/eventService";
+import { DateTime } from "luxon";
 class EventController {
 
     async createEvent(req: Request, res: Response) {
@@ -13,10 +14,15 @@ class EventController {
             if(!errors.isEmpty()) {
                 return res.status(400).json({ errors: errors.array() });
             }
+
+          const timezone = "America/Argentina/Buenos_Aires";
+          const dateTimeISO = req.body.dateTime;
+          const localDateTime = DateTime.fromISO(dateTimeISO, { zone: "utc" }).setZone(timezone);
+          req.body.dateTime = localDateTime.toJSDate();
+
           const newEvent = await Event.create(req.body);
           const eventId = newEvent.id;
-          const { dateTime } = req.body;
-          const eventDateModified = new Date(dateTime);
+          const eventDateModified = new Date(dateTimeISO);
 
           schedule.scheduleJob(eventDateModified, function () {
             eventService.deleteScheduledEvent(eventId);
@@ -128,6 +134,39 @@ class EventController {
         return res.status(500).send("An error occurred while toggling the event status");
     }
   }
+
+  async getEventsByCategoryName(req: Request, res: Response) {
+    try {
+      const { categoryName } = req.params;
+      const events = await Event.find({ category: categoryName });
+      return res.status(200).json(events);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+}
+
+async getEventsByDateRange(req: Request, res: Response) {
+  try {
+    const { startDate, endDate } = req.query;
+
+    if (!startDate || !endDate) {
+      return res.status(400).json({ message: "Both startDate and endDate are required." });
+  }
+
+    const start = new Date(startDate as string);
+    const end = new Date(endDate as string);
+
+    const events = await Event.find({
+      dateTime: { $gte: start, $lte: end },
+    });
+    
+    return res.status(200).json(events);
+  } catch (error) {
+      return res.status(500).json({ message: "An error occurred while fetching events." });
+  }
+}
+
+
 }
 
 export const eventController = new EventController();
