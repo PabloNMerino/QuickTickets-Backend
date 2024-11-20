@@ -5,6 +5,7 @@ const { validationResult } = require("express-validator");
 import { emailService } from "../../email/service/emailService";
 import schedule from "node-schedule"
 import { eventService } from "../service/eventService";
+import { DateTime } from "luxon";
 class EventController {
 
     async createEvent(req: Request, res: Response) {
@@ -13,6 +14,7 @@ class EventController {
             if(!errors.isEmpty()) {
                 return res.status(400).json({ errors: errors.array() });
             }
+
           const newEvent = await Event.create(req.body);
           const eventId = newEvent.id;
           const { dateTime } = req.body;
@@ -36,7 +38,14 @@ class EventController {
             if(!event) {
                 return res.status(404).json({message: `Event id ${id} not found`})
             }
-            return res.status(200).json(event);
+
+          const timeZone = 'America/Argentina/Buenos_Aires';
+
+          const eventWithLocalTime = {
+            ...event.toObject(),
+            dateTime: DateTime.fromJSDate(event.dateTime).setZone(timeZone).toISO(),
+          };
+            return res.status(200).json(eventWithLocalTime);
         } catch (error) {
             res.status(500).json({ message: 'Server error', error });
         }
@@ -44,8 +53,16 @@ class EventController {
 
     async getAllEvents(req: Request, res: Response) {
         try {
-            const allEvents = await Event.find({ is_active: true });
-            return res.status(200).json(allEvents);
+          const allEvents = await Event.find({ is_active: true });
+          const timeZone = 'America/Argentina/Buenos_Aires';
+
+          const eventsWithLocalTime = allEvents.map(event => {
+            return {
+              ...event.toObject(),
+              dateTime: DateTime.fromJSDate(event.dateTime).setZone(timeZone).toISO(),
+            };
+          });
+            return res.status(200).json(eventsWithLocalTime);
           } catch (error) {
               res.status(500).json({ message: 'Server error', error });
           }
@@ -54,7 +71,15 @@ class EventController {
     async getAllPausedEvents(req: Request, res: Response) {
       try {
           const allEvents = await Event.find({ is_active: false });
-          return res.status(200).json(allEvents);
+          const timeZone = 'America/Argentina/Buenos_Aires';
+
+          const eventsWithLocalTime = allEvents.map(event => {
+            return {
+              ...event.toObject(),
+              dateTime: DateTime.fromJSDate(event.dateTime).setZone(timeZone).toISO(),
+            };
+          });
+          return res.status(200).json(eventsWithLocalTime);
         } catch (error) {
             res.status(500).json({ message: error });
         }
@@ -98,7 +123,17 @@ class EventController {
         const userId = req.userId;
         console.log("ID: " + userId);
         const events = await Event.find({ creatorId: userId });
-        return res.status(200).json(events);
+
+        const timeZone = 'America/Argentina/Buenos_Aires';
+
+        const eventsWithLocalTime = events.map(event => {
+          return {
+            ...event.toObject(),
+            dateTime: DateTime.fromJSDate(event.dateTime).setZone(timeZone).toISO(),
+          };
+        });
+
+        return res.status(200).json(eventsWithLocalTime);
       } catch (error) {
           res.status(500).json({ message: 'Server error', error });
       }
@@ -114,7 +149,6 @@ class EventController {
             return res.status(404).send("Event not found");
         }
 
-        // Alternar el estado de is_active
         event.is_active = !event.is_active;
 
         await event.save();
@@ -128,6 +162,138 @@ class EventController {
         return res.status(500).send("An error occurred while toggling the event status");
     }
   }
+
+  async getEventsByCategoryName(req: Request, res: Response) {
+    try {
+      const { categoryName } = req.params;
+      const events = await Event.find({ category: categoryName });
+
+      const timeZone = 'America/Argentina/Buenos_Aires';
+
+      const eventsWithLocalTime = events.map(event => {
+        return {
+          ...event.toObject(),
+          dateTime: DateTime.fromJSDate(event.dateTime).setZone(timeZone).toISO(),
+        };
+      });
+      return res.status(200).json(eventsWithLocalTime);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+}
+
+async getEventsByDateRange(req: Request, res: Response) {
+  try {
+    const { startDate, endDate } = req.query;
+
+    if (!startDate || !endDate) {
+      return res.status(400).json({ message: "Both startDate and endDate are required." });
+  }
+
+        const start = new Date(startDate as string);
+        const end = new Date(endDate as string);
+
+    const events = await Event.find({
+      dateTime: { $gte: start, $lte: end },
+    });
+
+    const timeZone = 'America/Argentina/Buenos_Aires';
+
+    const eventsWithLocalTime = events.map(event => {
+      return {
+        ...event.toObject(),
+        dateTime: DateTime.fromJSDate(event.dateTime).setZone(timeZone).toISO(),
+      };
+    });
+    return res.status(200).json(eventsWithLocalTime);
+  } catch (error) {
+      return res.status(500).json({ message: "An error occurred while fetching events." });
+  }
+}
+
+async getAllFreeEvents(req: Request, res: Response) {
+  try {
+      const allEvents = await Event.find({ price: 0 });
+
+      const timeZone = 'America/Argentina/Buenos_Aires';
+
+      const eventsWithLocalTime = allEvents.map(event => {
+        return {
+          ...event.toObject(),
+          dateTime: DateTime.fromJSDate(event.dateTime).setZone(timeZone).toISO(),
+        };
+      });
+      return res.status(200).json(eventsWithLocalTime);
+    } catch (error) {
+        res.status(500).json({ message: error });
+    }
+}
+
+async getAllPaidEvents(req: Request, res: Response) {
+  try {
+      const allEvents = await Event.find({ price: { $gt: 0 }});
+
+      const timeZone = 'America/Argentina/Buenos_Aires';
+
+      const eventsWithLocalTime = allEvents.map(event => {
+        return {
+          ...event.toObject(),
+          dateTime: DateTime.fromJSDate(event.dateTime).setZone(timeZone).toISO(),
+        };
+      });
+      return res.status(200).json(eventsWithLocalTime);
+    } catch (error) {
+        res.status(500).json({ message: error });
+    }
+}
+
+async getLastTenEvents(req: Request, res: Response) {
+  try {
+    const lastTenEvents = await Event.find()
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    const timeZone = 'America/Argentina/Buenos_Aires';
+
+    const eventsWithLocalTime = lastTenEvents.map(event => {
+      return {
+        ...event.toObject(),
+        dateTime: DateTime.fromJSDate(event.dateTime).setZone(timeZone).toISO(),
+      };
+    });
+
+    return res.status(200).json(eventsWithLocalTime);
+  } catch (error) {
+    return res.status(500).json({ message: "An error occurred while fetching the last 10 events." });
+  }
+}
+
+async  getEventsToday(req: Request, res: Response) {
+  try {
+    const todayStart = DateTime.now().startOf('day').toJSDate();
+    const todayEnd = DateTime.now().endOf('day').toJSDate();
+
+    const eventsToday = await Event.find({
+      dateTime: {
+        $gte: todayStart,
+        $lte: todayEnd,
+      }
+    });
+
+    const timeZone = 'America/Argentina/Buenos_Aires';
+
+    const eventsWithLocalTime = eventsToday.map(event => {
+      return {
+        ...event.toObject(),
+        dateTime: DateTime.fromJSDate(event.dateTime).setZone(timeZone).toISO(),
+      };
+    });
+
+    return res.status(200).json(eventsWithLocalTime);
+  } catch (error) {
+    return res.status(500).json({ message: "An error occurred while fetching today's events." });
+  }
+}
 }
 
 export const eventController = new EventController();
