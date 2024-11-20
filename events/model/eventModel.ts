@@ -53,6 +53,10 @@ const eventSchema = new Schema({
     is_active: {
         type: Boolean,
         default: true,          
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
     }
 })
 
