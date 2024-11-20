@@ -44,6 +44,8 @@ const usersRouter = express.Router();
  */
 usersRouter.put("/update", isAuthenticated, userController.updateUser);
 
+usersRouter.patch('/subscription', isAuthenticated, userController.toggleUserSubscription);
+
 /**
  * @swagger
  * /user/delete:

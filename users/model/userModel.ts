@@ -24,6 +24,14 @@ const userSchema = new Schema({
             type: Number,
             required: true,
         },
+    state: {
+        type: String,
+        required: true,
+        },
+    country: {
+        type: String,
+        required: true,
+        },
     password: {
         type: String,
         required: true,
@@ -32,6 +40,10 @@ const userSchema = new Schema({
         type: String,
         enum: Object.values(UserRole),
         default: UserRole.Customer
+    },
+    is_subscribed: {
+        type: Boolean,
+        default: false,          
     },
     is_active: {
         type: Boolean,
