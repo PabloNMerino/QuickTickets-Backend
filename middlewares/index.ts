@@ -31,7 +31,7 @@ export function isAuthenticated(req: Request, res: Response, next: Function) {
     const token = req.headers["token"];
 
     if (!token) {
-        return res.status(401).send("Unauthorized: User must be logged");
+        return res.status(401).json({message:"Unauthorized: User must be logged"});
     }
 
     try {
@@ -39,6 +39,6 @@ export function isAuthenticated(req: Request, res: Response, next: Function) {
         req.userId = decoded.userId;
         next();     
     } catch (error) {
-        return res.status(401).send("Unauthorized: Invalid token");
+        return res.status(401).json({message:"Unauthorized: Invalid token"});
     }
 }
