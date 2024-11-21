@@ -44,6 +44,35 @@ const usersRouter = express.Router();
  */
 usersRouter.put("/update", isAuthenticated, userController.updateUser);
 
+
+/**
+ * @swagger
+ * /subscription:
+ *   patch:
+ *     summary: Suscribirse o darse de baja del newsletter
+ *     tags: [User]
+ *     description: Activa o desactiva la suscripción al newsletter del usuario autenticado.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: ID del usuario que desea modificar su suscripción.
+ *                 example: 671fe9661b8f8d3bf35776cc
+ *     responses:
+ *       200:
+ *         description: Suscripción al newsletter actualizada exitosamente
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Error interno al actualizar la suscripción.
+ */
 usersRouter.patch('/subscription', isAuthenticated, userController.toggleUserSubscription);
 
 /**
