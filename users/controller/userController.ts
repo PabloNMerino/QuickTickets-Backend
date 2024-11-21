@@ -208,5 +208,28 @@ class UserController {
         }
     }
 
+    async toggleUserSubscription(req: Request, res: Response) {
+    
+        try {
+            const userId = req.userId;
+            const user = await User.findById(userId);
+    
+            if (!user) {
+                return res.status(404).send("User not found");
+            }
+    
+            // Alternar el estado de is_subscribed
+            user.is_subscribed = !user.is_subscribed;
+    
+            await user.save();
+            emailService.sendSubscriptionEmail(user?.email, user.is_subscribed);
+
+            const status = user.is_subscribed ? "active" : "paused";
+            return res.status(200).send(`${user.first_name} ${user.last_name} subscription status is ${status}`);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send("An error occurred while toggling the user status");
+        }
+    }
 }
 export const userController = new UserController();

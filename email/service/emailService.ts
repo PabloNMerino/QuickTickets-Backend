@@ -9,6 +9,9 @@ import { activeEventTemplate } from "../templates/activeEventEmail"
 import { reminderTemplate } from "../templates/remiderEmail"
 import { forgotPasswordTemplate } from "../templates/forgotPasswordEmail"
 import { lastReminderTemplate } from "../templates/lastReminderEmail"
+import { activeSubscriptionTemplate } from "../templates/activeSubscriptionEmail"
+import { inactiveSubscriptionTemplate } from "../templates/inactiveSubscriptionEmail"
+import { newEventTemplate } from "../templates/newEventSubscriptionEmail"
 
 class EmailService {
 
@@ -169,6 +172,54 @@ class EmailService {
             from: process.env.SMTP_USER,
             to: destinationEmail,
             subject: 'Tu evento es hoy!',
+            html: minifiedHtml,
+        };
+
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log('Correo enviado:', info.response);
+        } catch (error) {
+            console.error('Error enviando el correo:', error);
+        }
+    }
+
+    async sendSubscriptionEmail(destinationEmail: string, isSubscribed: boolean) {
+        const htmlContent = isSubscribed? activeSubscriptionTemplate() : inactiveSubscriptionTemplate() ;
+        const minifiedHtml = await minify(htmlContent, {
+                                collapseWhitespace: true,
+                                removeComments: true,
+                                minifyCSS: true,
+                                minifyJS: true,
+                            });
+
+        const mailOptions = {
+            from: process.env.SMTP_USER,
+            to: destinationEmail,
+            subject: isSubscribed? 'Te has suscripto exitosamente!' : 'Tu suscripcion fue dada de baja!',
+            html: minifiedHtml,
+        };
+
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log('Correo enviado:', info.response);
+        } catch (error) {
+            console.error('Error enviando el correo:', error);
+        }
+    }
+
+    async sendEmailToSubscribers(destinationEmail: string, name: string, description: string, date: Date) {
+        const htmlContent = newEventTemplate(name, description, date);
+        const minifiedHtml = await minify(htmlContent, {
+                                collapseWhitespace: true,
+                                removeComments: true,
+                                minifyCSS: true,
+                                minifyJS: true,
+                            });
+
+        const mailOptions = {
+            from: process.env.SMTP_USER,
+            to: destinationEmail,
+            subject: 'Hay un nuevo evento en tu zona!',
             html: minifiedHtml,
         };
 

@@ -24,6 +24,20 @@ class EventController {
             eventService.deleteScheduledEvent(eventId);
         });
 
+        const location = req.body.location;
+        const [eState, eCountry] = location.split(',').map((part: string) => part.trim().toLowerCase());
+        
+        const users = await User.find({
+          state: eState,
+          country: eCountry,
+          is_subscribed: true
+      })
+
+      if(users.length>0) {
+        users.map(user=>{
+          emailService.sendEmailToSubscribers(user.email, req.body.name, req.body.description, req.body.dateTime);
+        })
+      }
           return res.status(201).send('Event succesfully created');
         } catch (error) {
           res.status(500).json({ message: 'Server error', error });
