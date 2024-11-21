@@ -100,23 +100,27 @@ class EventController {
 
 
     async updateEvent(req: Request, res: Response) {
-        const { id } = req.params;
-        try {
-          const errors = validationResult(req);
-            if(!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
-            }
-          const event = await Event.findByIdAndUpdate(id, req.body);
-
-          if(!event) {
-            res.status(404).send(`Event with Id ${id} not found`)
+      const { id } = req.params;
+      try {
+        const errors = validationResult(req);
+          if(!errors.isEmpty()) {
+              return res.status(400).json({ errors: errors.array() });
           }
+        const event = await Event.findByIdAndUpdate(id, req.body , {new:true});
 
-          return res.status(200).send(`Event with Id ${id} succesfully updated`)
-        } catch (error) {
-            res.status(500).json({ message: 'Server error', error });
+        if (!event) {
+          return res.status(404).json({ message: `Event with Id ${id} not found` });
         }
-    }
+
+        return res.status(200).json({
+          message: `Event with Id ${id} successfully updated`,
+          event,
+        });
+
+      } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+      }
+  }
 
     async getMyPostedEvents(req: Request, res: Response) {
       try {

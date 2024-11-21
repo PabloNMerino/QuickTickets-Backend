@@ -170,15 +170,15 @@ class UserController {
                 { expiresIn: "30m" }
             );
           
-                       
-            const url= `http://localhost:3000/recover-password?token=${token}`
+        
+            const url= `http://localhost:3000/auth/reset-password?token=${token}`
             emailService.sendForgotPasswordEmail(user.email, url);
 
-            return res.status(200).send(`mail sended to ${user.email}`);
+            return res.status(200).json({message: `mail sended to ${user.email}`});
         } catch (error) {
             console.error(error);
-            return res.status(500).send("An error occurred while toggling the user status");
-        }
+            return res.status(500).json({message: "An error occurred while toggling the user status"});
+    }
     }
 
     async generateNewPassword(req: Request, res: Response) {
@@ -201,10 +201,10 @@ class UserController {
                 { new: true }
             );
             
-            return res.status(200).send(`password updated`);
+            return res.status(200).json({message: `password updated`});
         } catch (error) {
             console.error(error);
-            return res.status(400).send("El token ha expirado");
+            return res.status(400).json({message: "El token ha expirado"});
         }
     }
 

@@ -11,7 +11,7 @@ class CategoryController {
                 return res.status(400).json({ errors: errors.array() });
             }
             Category.create(req.body);
-            return res.status(201).send(`Category ${req.body.name} succesfully created`);
+            return res.status(201).json({message: `Category ${req.body.name} succesfully created}`});
         } catch (error) {
             res.status(500).json({ message: 'Server error', error });
         }
