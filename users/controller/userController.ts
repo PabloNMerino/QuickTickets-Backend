@@ -170,8 +170,8 @@ class UserController {
                 { expiresIn: "30m" }
             );
           
-                       
-            const url= `http://localhost:3000/recover-password?token=${token}`
+        
+            const url= `http://localhost:3000/auth/reset-password?token=${token}`
             emailService.sendForgotPasswordEmail(user.email, url);
 
             return res.status(200).send(`mail sended to ${user.email}`);
