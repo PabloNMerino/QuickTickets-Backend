@@ -174,13 +174,13 @@ class UserController {
             const url= `http://localhost:3000/auth/reset-password?token=${token}`
             emailService.sendForgotPasswordEmail(user.email, url);
 
-            return res.status(200).send(`mail sended to ${user.email}`);
+            return res.status(200).json({message: `mail sended to ${user.email}`});
         } catch (error) {
             console.error(error);
-            return res.status(500).send("An error occurred while toggling the user status");
-        }
+            return res.status(500).json({message: "An error occurred while toggling the user status"});
     }
-
+    }
+    
     async generateNewPassword(req: Request, res: Response) {
         const { newPassword, newPasswordRepeated, token } = req.body;
     
