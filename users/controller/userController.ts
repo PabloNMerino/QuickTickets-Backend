@@ -180,7 +180,7 @@ class UserController {
             return res.status(500).json({message: "An error occurred while toggling the user status"});
     }
     }
-    
+
     async generateNewPassword(req: Request, res: Response) {
         const { newPassword, newPasswordRepeated, token } = req.body;
     
@@ -201,10 +201,10 @@ class UserController {
                 { new: true }
             );
             
-            return res.status(200).send(`password updated`);
+            return res.status(200).json({message: `password updated`});
         } catch (error) {
             console.error(error);
-            return res.status(400).send("El token ha expirado");
+            return res.status(400).json({message: "El token ha expirado"});
         }
     }
 
