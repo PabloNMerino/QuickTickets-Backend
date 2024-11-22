@@ -44,7 +44,7 @@ export const purchaseTemplate = (title: string, date: Date, quantity: number): s
                 Puedes acceder a tus tickets a través del siguiente enlace:
             </p>
             <p style="text-align: center; margin: 20px 0;">
-                <a href="https://example.com/mis-tickets" style="background-color: #FFE047; color: #2B293D; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; display: inline-block;">
+                <a href="http://localhost:3000/tickets" style="background-color: #FFE047; color: #2B293D; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; display: inline-block;">
                     Ver Mis Tickets
                 </a>
             </p>

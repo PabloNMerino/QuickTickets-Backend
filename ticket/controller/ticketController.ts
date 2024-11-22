@@ -97,6 +97,27 @@ class TicketController {
             return res.status(500);
         }
     }
+
+    async checkTicketStatus(req: Request, res: Response) {
+        const { ticketId } = req.body;
+        try {
+            const ticket = await Ticket.findById(ticketId);
+                if(!ticket?.is_used) {
+                    const event = await Event.findById(ticket?.eventId);
+                    await Ticket.findByIdAndUpdate(
+                        ticketId,
+                        { is_used: true },
+                        { new: true })
+                    return res.status(200).json({ message: 'Authorized', eventName: event?.name })
+                } else {
+                    return res.status(200).json({ message: 'Denied' })
+                }
+        }
+        catch (error) {
+            return res.status(500).json({ message: error })
+        }
+    }
+
 }
 
 export const ticketController = new TicketController();

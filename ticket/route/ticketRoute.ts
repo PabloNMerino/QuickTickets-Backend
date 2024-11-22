@@ -1,6 +1,6 @@
 import express from "express";
 import { ticketController } from "../controller/ticketController";
-import { isAuthenticated } from "../../middlewares";
+import { isAuthenticated, isAdmin } from "../../middlewares";
 
 const ticketRouter = express.Router();
 
@@ -86,5 +86,34 @@ ticketRouter.get('/download', ticketController.downloadTicket);
  *         description: Error al obtener los tickets del usuario.
  */
 ticketRouter.get('/my-tickets', isAuthenticated, ticketController.getAllTicketsByBuyerId)
+
+/**
+ * @swagger
+ * /ticket/status:
+ *   patch:
+ *     summary: Marcar un ticket como utilizado
+ *     tags: [Ticket]
+ *     description: Actualiza la propiedad "is_used" de un ticket a true si su valor actual es false.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ticketId:
+ *                 type: string
+ *                 description: ID del ticket a marcar como utilizado.
+ *                 example: 672272773d5248be4b5964a7
+ *     responses:
+ *       200:
+ *         description: Indicacion "Authorized" o "Denied"
+ *       500:
+ *         description: Error interno al actualizar el ticket.
+ */
+ticketRouter.patch('/status', isAdmin, ticketController.checkTicketStatus);
+
 
 export default ticketRouter;

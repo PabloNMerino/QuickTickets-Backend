@@ -19,7 +19,8 @@ class EventController {
           const eventId = newEvent.id;
           const { dateTime } = req.body;
           const eventDateModified = new Date(dateTime);
-
+          eventDateModified.setHours(eventDateModified.getHours() + 1);
+          
           schedule.scheduleJob(eventDateModified, function () {
             eventService.deleteScheduledEvent(eventId);
         });

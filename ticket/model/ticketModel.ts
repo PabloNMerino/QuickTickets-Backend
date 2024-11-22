@@ -17,6 +17,10 @@ const ticketSchema = new Schema({
     },
     qrCode: {
         type: String,
+    },
+    is_used: {
+        type: Boolean,
+        default: false,
     }
 })
 
