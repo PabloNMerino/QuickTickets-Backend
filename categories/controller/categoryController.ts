@@ -70,7 +70,7 @@ class CategoryController {
                 return res.status(404).send(`Category with Id ${id} not found`);
             }
     
-            return res.status(200).json({ message: `Category with Id ${id} successfully updated`});
+            return res.status(200).json({ category });
         } catch (error) {
             return res.status(500).json({ message: 'Server error', error });
         }
