@@ -48,6 +48,10 @@ const userSchema = new Schema({
     is_active: {
         type: Boolean,
         default: true,          
+    },
+    imageUrl: {
+        type: String,
+        default: 'https://res.cloudinary.com/dsxdtlwsy/image/upload/v1732302573/bxpghbwkhjdcy7rmc2fm.jpg'
     }
 })
 
