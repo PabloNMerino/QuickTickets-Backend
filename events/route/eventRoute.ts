@@ -84,6 +84,35 @@ eventRouter.get("/all-paused-events", isAdmin, eventController.getAllPausedEvent
 
 /**
  * @swagger
+ * /event/creator-name:
+ *   get:
+ *     summary: Obtiene el nombre del creador del evento
+ *     description: Devuelve el nombre del creador del evento especificado por el ID.
+ *     tags: [Event]
+ *     parameters:
+ *       - in: path
+ *         name: eventId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del evento
+ *     responses:
+ *       200:
+ *         description: Nombre del creador del evento devuelto correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 username:
+ *                   type: string
+ *                   example: "Juan Pérez"
+ *       500:
+ *         description: Error interno del servidor
+ */
+eventRouter.get("/creator-name", eventController.getCreatorName)
+/**
+ * @swagger
  * /event/free:
  *   get:
  *     summary: Obtener eventos gratuitos

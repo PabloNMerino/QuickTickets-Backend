@@ -313,6 +313,18 @@ async  getEventsToday(req: Request, res: Response) {
     return res.status(500).json({ message: "An error occurred while fetching today's events." });
   }
 }
+
+async getCreatorName(req: Request, res: Response) {
+  const { eventId } = req.body;
+  
+  try {
+    const event = await Event.findById(eventId,  `creatorId`);
+    const user = await User.findById(event?.creatorId);
+    return res.status(200).json({username: `${user?.first_name} ${user?.last_name}`})
+  } catch (error) {
+    return res.status(500).json({ message: error })
+  }
+}
 }
 
 export const eventController = new EventController();
