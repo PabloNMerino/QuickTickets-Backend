@@ -1,6 +1,6 @@
 import express from "express";
 import { ticketController } from "../controller/ticketController";
-import { isAuthenticated, isAdmin } from "../../middlewares";
+import { isAuthenticated, isVerifier } from "../../middlewares";
 
 const ticketRouter = express.Router();
 
@@ -113,7 +113,7 @@ ticketRouter.get('/my-tickets', isAuthenticated, ticketController.getAllTicketsB
  *       500:
  *         description: Error interno al actualizar el ticket.
  */
-ticketRouter.patch('/status', isAdmin, ticketController.checkTicketStatus);
+ticketRouter.patch('/status', isVerifier, ticketController.checkTicketStatus);
 
 
 export default ticketRouter;
