@@ -15,7 +15,15 @@ class EventController {
                 return res.status(400).json({ errors: errors.array() });
             }
 
-          const newEvent = await Event.create(req.body);
+          const userId = req.userId;
+          const user = await User.findById(userId, 'first_name last_name imageUrl');
+
+          const newEvent = await Event.create({
+             ...req.body,
+            creatorFullName: `${user?.first_name} ${user?.last_name}`,
+            creatorImageUrl: user?.imageUrl 
+            });
+            
           const eventId = newEvent.id;
           const { dateTime } = req.body;
           const eventDateModified = new Date(dateTime);

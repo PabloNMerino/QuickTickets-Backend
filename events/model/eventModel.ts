@@ -50,6 +50,12 @@ const eventSchema = new Schema({
         ref: "User",
         required: true,
     },
+    creatorFullName: {
+        type: String
+    },
+    creatorImageUrl: {
+        type: String
+    },
     is_active: {
         type: Boolean,
         default: true,          
