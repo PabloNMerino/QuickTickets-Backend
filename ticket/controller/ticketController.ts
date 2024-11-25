@@ -108,7 +108,7 @@ class TicketController {
                         ticketId,
                         { is_used: true },
                         { new: true })
-                    return res.status(200).json({ message: 'Authorized', eventName: event?.name })
+                    return res.status(200).json({ message: 'Authorized', eventName: event?.name, eventDate: event?.dateTime })
                 } else {
                     return res.status(200).json({ message: 'Denied' })
                 }
