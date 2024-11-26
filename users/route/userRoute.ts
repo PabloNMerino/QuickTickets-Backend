@@ -47,6 +47,32 @@ usersRouter.put("/update", isAuthenticated, userController.updateUser);
 
 /**
  * @swagger
+ * /user/new-admin:
+ *   patch:
+ *     summary: Cambiar rol de usuario a Admin
+ *     tags: [User] 
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: Id del usuario a hacer admin
+ *                 example: 123123123
+ *     responses:
+ *       200:
+ *         description: Usuario es ahora admin
+ */
+usersRouter.patch("/new-admin", isAdmin, userController.setNewAdmin);
+
+
+/**
+ * @swagger
  * /subscription:
  *   patch:
  *     summary: Suscribirse o darse de baja del newsletter
