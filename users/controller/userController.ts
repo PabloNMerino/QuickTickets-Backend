@@ -231,5 +231,16 @@ class UserController {
             return res.status(500).send("An error occurred while toggling the user status");
         }
     }
+
+    async setNewAdmin(req: Request, res: Response) {
+        const { userId } = req.body;
+
+        try {
+            const user = await User.findByIdAndUpdate(userId, {$set: { role: "admin" }}, { new: true })
+            return res.status(200).json(user);
+        } catch (error) {
+            return res.json({ message: "Algo salio mal" })
+        }
+    }
 }
 export const userController = new UserController();
