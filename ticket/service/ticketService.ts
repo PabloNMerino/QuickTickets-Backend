@@ -18,7 +18,7 @@ class TicketService {
                 });
     
                 // Generar el código QR
-                const qrCodeData = `http://${process.env.HOST}:${process.env.PORT}/tickets/${ticket._id}`;
+                const qrCodeData = `hhttps://bootcamps3-proyecto-final-frontend.vercel.app/scannerQr/Status?ticketId=${ticket._id}`;
                 const qrCode = await QRCode.toDataURL(qrCodeData);
     
                 // Asignar el código QR al ticket

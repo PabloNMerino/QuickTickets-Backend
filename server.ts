@@ -22,7 +22,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: `http://${HOST}:3000`,
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'token', 'ngrok-skip-browser-warning']
 }));
