@@ -67,7 +67,7 @@ class AuthController {
                 process.env.JWT_SECRET!,
                 { expiresIn: "1h" }
             );
-    
+            
             return res.status(200).json({ token, user: userPayload });
         } catch (error) {
             return res.status(400).json({message: "something went wrong"})
