@@ -48,7 +48,7 @@ class TicketController {
                     align: 'center',
                   });
 
-                const qrCodeImage = await QRCode.toDataURL(`http://www.localhost:3001/ticket/${ticket._id}`);
+                const qrCodeImage = await QRCode.toDataURL(`https://bootcamps3-proyecto-final-frontend.vercel.app/scannerQr/Status?ticketId=${ticket._id}`);
 
                 // Obtener el tamaño de la imagen
                 const qrImageWidth = 200; // El ancho de la imagen que quieres mostrar

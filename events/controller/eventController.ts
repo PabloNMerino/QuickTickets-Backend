@@ -38,7 +38,6 @@ class EventController {
         
         const users = await User.find({
           state: eState,
-          country: eCountry,
           is_subscribed: true
       })
 
