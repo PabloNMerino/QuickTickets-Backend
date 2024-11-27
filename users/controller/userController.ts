@@ -171,7 +171,7 @@ class UserController {
             );
           
         
-            const url= `http://localhost:3000/auth/reset-password?token=${token}`
+            const url= `https://bootcamps3-proyecto-final-frontend.vercel.app/auth/reset-password?token=${token}`
             emailService.sendForgotPasswordEmail(user.email, url);
 
             return res.status(200).json({message: `mail sended to ${user.email}`});
