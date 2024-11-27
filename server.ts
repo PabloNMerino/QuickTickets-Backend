@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(cors({
     origin: `http://${HOST}:3000`,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'token']
+    allowedHeaders: ['Content-Type', 'Authorization', 'token', 'ngrok-skip-browser-warning']
 }));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
