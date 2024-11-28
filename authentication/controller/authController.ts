@@ -61,7 +61,7 @@ class AuthController {
                 email: existingUser.email,
                 role: existingUser.role,
             }
-
+            
             const token = sign(
                 userPayload,
                 process.env.JWT_SECRET!,
